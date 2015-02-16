@@ -8,16 +8,13 @@
 
 #include "ABVector.h"
 
+#include "ABVertex.h"
+#include "ABEdge.h"
+
 #include <stdexcept>
-//#include <iostream>
+#include <iostream>
 
 using namespace std;
-
-template <typename T>
-ABVector<T>::ABVector() : _size(0), _capacity(0)
-{
-	_origin = nullptr;
-}
 
 template <typename T>
 ABVector<T>::ABVector(int aCapacity) : _size(0), _capacity(aCapacity)
@@ -85,7 +82,7 @@ int ABVector<T>::getCapacity() const
 template <typename T>
 bool ABVector<T>::isEmpty() const
 {
-	return !(getSize() > 0);
+	return getSize() == 0;
 }
 
 #pragma mark -
@@ -194,43 +191,56 @@ T ABVector<T>::remove(int aPosition)
 template <typename T>
 typename ABVector<T>::ABIterator ABVector<T>::begin()
 {
-	if (isEmpty())
-	{
-		throw invalid_argument("isEmpty()");
-	}
 	return &_origin[0];
 }
 
 template <typename T>
 typename ABVector<T>::ABConstIterator ABVector<T>::begin() const
 {
-	if (isEmpty())
-	{
-		throw invalid_argument("isEmpty()");
-	}
 	return &_origin[0];
 }
 
 template <typename T>
 typename ABVector<T>::ABIterator ABVector<T>::end()
 {
-	if (isEmpty())
-	{
-		throw invalid_argument("isEmpty()");
-	}
-	return &_origin[getSize() - 1];
+	return &_origin[getSize()];
 }
 
 template <typename T>
 typename ABVector<T>::ABConstIterator ABVector<T>::end() const
 {
-	if (isEmpty())
-	{
-		throw invalid_argument("isEmpty()");
-	}
-	return &_origin[getSize() - 1];
+	return &_origin[getSize()];
 }
 
+#pragma mark - 
 
 template class ABVector<int>;
 template class ABVector<int *>;
+template class ABVector<ABVertex>;
+template class ABVector<ABEdge>;
+
+#pragma mark -
+
+void ABVectorUnitTests()
+{
+	ABVector<int *> v(0);
+	int j;
+	for (j = 0; j < 10; ++j)
+	{
+		int *i = new int(j);
+		v.pushBack(i);
+	}
+	
+	const ABVector<int *> constV = v;
+	ABVector<int *>::ABConstIterator constI;
+	for (constI = constV.begin(); constI != constV.end(); ++constI)
+	{
+		cout << **constI << endl;
+	}
+	
+	ABVector<int *>::ABIterator i;
+	for (i = v.begin(); i != v.end(); ++i)
+	{
+		delete *i;
+	}
+}

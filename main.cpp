@@ -8,32 +8,25 @@
 
 #include <iostream>
 
-#include "ABVector.h"
+#include "ABGraph.h"
 
 using namespace std;
 
 int main()
 {
-	ABVector<int *> v(0);
-	int j;
-	for (j = 0; j < 10; ++j)
-	{
-		int *i = new int(j);
-		v.pushBack(i);
-	}
+	ABGraphUnitTests();
 	
-	const ABVector<int *> constV = v;
-	ABVector<int *>::ABConstIterator constI;
-	for (constI = constV.begin(); constI != constV.end(); ++constI)
-	{
-		cout << **constI << endl;
+	int minCut = INT32_MAX;
+	int i;
+	for (i = 0; i < 4000; ++i)
+ 	{
+		ABGraph g;
+		g.loadGraph();
+		
+		int result = g.minCutContractionAlgorithm();
+		minCut = result < minCut ? result : minCut;
 	}
-	
-	ABVector<int *>::ABIterator i;
-	for (i = v.begin(); i != v.end(); ++i)
-	{
-		delete *i;
-	}
+	cout << minCut << endl;
 	
 	return 0;
 }

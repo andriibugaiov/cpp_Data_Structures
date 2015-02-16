@@ -18,8 +18,9 @@ class ABVector
 	
 	void reserve(int aCapacity);
 public:
-	ABVector();
-	ABVector(int aCapacity = 0);
+	// TODO: (Graph) rework after assignment submission
+	
+	ABVector(int aCapacity = 3000);
 	ABVector(const ABVector<T> &anOther);
 	~ABVector();
 
@@ -46,5 +47,8 @@ public:
 	ABIterator end();
 	ABConstIterator end() const;
 };
+
+// TODO: implement adapter class
+void ABVectorUnitTests();
 
 #endif /* defined(__workplace__Vector__) */
