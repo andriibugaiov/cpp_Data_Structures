@@ -11,6 +11,7 @@
 #include "ABNode.h"
 
 #include "ABEdge.h"
+#include "ABVertex.h"
 
 #include <stdexcept>
 #include <iostream>
@@ -335,29 +336,31 @@ typename ABList<T>::ABIterator ABList<T>::remove(ABIterator aStart, ABIterator a
 template class ABList<int>;
 template class ABList<int *>;
 template class ABList<ABEdge *>;
+template class ABList<ABEdge>;
+template class ABList<ABVertex *>;
+template class ABList<ABVertex>;
 
 #pragma mark -
 
-void ABListUnitTests()
+void ABListUnitTests(ABList<int *> aList)
 {
-	ABList<int *> l;
 	int j;
 	for (j = 0; j < 10; ++j)
 	{
 		int *i = new int(j);
-		l.pushBack(i);
+		aList.pushBack(i);
 	}
 	
 	ABList<int *>::ABConstIterator constI;
-	for (constI = l.begin(); constI != l.end(); ++constI)
+	for (constI = aList.begin(); constI != aList.end(); ++constI)
 	{
 		cout << **constI << endl;
 	}
 	
 	ABList<int *>::ABIterator i;
-	for (i = l.begin(); i != l.end();)
+	for (i = aList.begin(); i != aList.end();)
 	{
 		delete *i;
-		i = l.remove(i);
+		i = aList.remove(i);
 	}
 }

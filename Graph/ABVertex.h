@@ -6,8 +6,6 @@
 //  Copyright (c) 2015 MyCompany. All rights reserved.
 //
 
-// TODO: (Graph) rework after assignment submission
-
 #ifndef __workplace__ABVertex__
 #define __workplace__ABVertex__
 
@@ -16,20 +14,20 @@
 class ABEdge;
 class ABVertex
 {
+	ABList<ABEdge *> _edges;
 public:
 	// TODO:
-	int _entryCount;
-	bool _active;
-	
+	//	ABList<int> _contracted_vertecies_ids;
 	int _vertex_id;
-	ABList<int> _contracted_vertecies_ids;
+	int _entryCount;
 	
-	ABList<ABEdge *> _edges;
-	
-	ABVertex(int aVertexId = -1) : _vertex_id(aVertexId)
+	ABVertex(int aVertexId = -1) : _vertex_id(aVertexId), _entryCount(0)
 	{
-		_entryCount = 0;
-		_active = true;
+	}
+	
+	ABList<ABEdge *> &getEdges()
+	{
+		return _edges;
 	}
 };
 

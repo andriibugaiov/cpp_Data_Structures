@@ -129,6 +129,26 @@ const T &ABVector<T>::operator[](int aPosition) const
 	return _origin[aPosition];
 }
 
+template <typename T>
+T &ABVector<T>::last()
+{
+	if (isEmpty())
+	{
+		throw invalid_argument("aPosition >= getSize()");
+	}
+	return _origin[getSize() - 1];
+}
+
+template <typename T>
+const T &ABVector<T>::last() const
+{
+	if (isEmpty())
+	{
+		throw invalid_argument("aPosition >= getSize()");
+	}
+	return _origin[getSize() - 1];
+}
+
 #pragma mark -
 
 template <typename T>
@@ -216,22 +236,23 @@ typename ABVector<T>::ABConstIterator ABVector<T>::end() const
 
 template class ABVector<int>;
 template class ABVector<int *>;
-template class ABVector<ABVertex>;
+template class ABVector<ABEdge *>;
 template class ABVector<ABEdge>;
+template class ABVector<ABVertex *>;
+template class ABVector<ABVertex>;
 
 #pragma mark -
 
-void ABVectorUnitTests()
+void ABVectorUnitTests(ABVector<int *> aVector)
 {
-	ABVector<int *> v(0);
 	int j;
 	for (j = 0; j < 10; ++j)
 	{
 		int *i = new int(j);
-		v.pushBack(i);
+		aVector.pushBack(i);
 	}
 	
-	const ABVector<int *> constV = v;
+	const ABVector<int *> constV = aVector;
 	ABVector<int *>::ABConstIterator constI;
 	for (constI = constV.begin(); constI != constV.end(); ++constI)
 	{
@@ -239,7 +260,7 @@ void ABVectorUnitTests()
 	}
 	
 	ABVector<int *>::ABIterator i;
-	for (i = v.begin(); i != v.end(); ++i)
+	for (i = aVector.begin(); i != aVector.end(); ++i)
 	{
 		delete *i;
 	}

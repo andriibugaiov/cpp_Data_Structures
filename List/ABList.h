@@ -94,17 +94,17 @@ public:
 
 	void pushFront(const T &aData);
 	void pushBack(const T &aData);
-	
+
 	// TODO:
-	// pop front
-	// pop back
-	
+//	void popFront();
+//	void popBack();
+
 	ABIterator insert(ABIterator anInterator, const T &aData);
 	ABIterator remove(ABIterator anInterator);
 	ABIterator remove(ABIterator aStart, ABIterator anEnd);
 };
 
 // TODO: implement adapter class
-void ABListUnitTests();
+void ABListUnitTests(ABList<int *> aList);
 
 #endif /* defined(__workplace__ABList__) */

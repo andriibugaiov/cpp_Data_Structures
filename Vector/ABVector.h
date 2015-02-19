@@ -18,9 +18,7 @@ class ABVector
 	
 	void reserve(int aCapacity);
 public:
-	// TODO: (Graph) rework after assignment submission
-	
-	ABVector(int aCapacity = 3000);
+	ABVector(int aCapacity = 8);
 	ABVector(const ABVector<T> &anOther);
 	~ABVector();
 
@@ -31,6 +29,9 @@ public:
 	const ABVector<T> &operator=(const ABVector &anOther);
 	T &operator[](int aPosition);
 	const T &operator[](int aPosition) const;
+	
+	T &last();
+	const T &last() const;
 	
 	void pushBack(const T &aData);
 	T popBack();
@@ -49,6 +50,6 @@ public:
 };
 
 // TODO: implement adapter class
-void ABVectorUnitTests();
+void ABVectorUnitTests(ABVector<int *> aVector);
 
 #endif /* defined(__workplace__Vector__) */

@@ -9,6 +9,7 @@
 #include "ABNode.h"
 
 #include "ABEdge.h"
+#include "ABVertex.h"
 
 template <typename T>
 ABNode<T>::ABNode()
@@ -32,4 +33,6 @@ T & ABNode<T>::getData()
 template class ABNode<int>;
 template class ABNode<int *>;
 template class ABNode<ABEdge *>;
-
+template class ABNode<ABEdge>;
+template class ABNode<ABVertex *>;
+template class ABNode<ABVertex>;
