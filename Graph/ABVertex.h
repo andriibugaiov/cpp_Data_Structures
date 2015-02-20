@@ -14,21 +14,15 @@
 class ABEdge;
 class ABVertex
 {
+	int _vertex_id;
 	ABList<ABEdge *> _edges;
 public:
-	// TODO:
-	//	ABList<int> _contracted_vertecies_ids;
-	int _vertex_id;
 	int _entryCount;
 	
-	ABVertex(int aVertexId = -1) : _vertex_id(aVertexId), _entryCount(0)
-	{
-	}
+	ABVertex(int aVertexId = -1);
 	
-	ABList<ABEdge *> &getEdges()
-	{
-		return _edges;
-	}
+	int getVertexId();
+	ABList<ABEdge *> &getEdges();
 };
 
 #endif /* defined(__workplace__ABVertex__) */

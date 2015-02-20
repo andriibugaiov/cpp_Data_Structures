@@ -23,9 +23,6 @@ class ABGraph
 	void contractVerteciesForEdge(ABEdge *anEdge);
 	
 public:
-	ABGraph();
-	~ABGraph();
-	
 	ABList<ABVertex> &getVertecies();
 	ABList<ABEdge> &getEdges();
 	

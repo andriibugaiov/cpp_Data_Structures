@@ -12,15 +12,17 @@
 class ABVertex;
 class ABEdge
 {
-public:
-	// TODO:
 	ABVertex *_head;
 	ABVertex *_tail;
+public:
 	int _entryCount;
 	
-	ABEdge(ABVertex *aHead = nullptr, ABVertex *aTail = nullptr) : _head(aHead), _tail(aTail), _entryCount(0)
-	{
-	}
+	ABEdge(ABVertex *aHead = nullptr, ABVertex *aTail = nullptr);
+	
+	ABVertex *getHead();
+	ABVertex *getTail();
+	void setHead(ABVertex *aHead);
+	void setTail(ABVertex *aTail);
 };
 
 

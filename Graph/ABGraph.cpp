@@ -20,16 +20,6 @@
 
 using namespace std;
 
-ABGraph::ABGraph()
-{
-	
-}
-
-ABGraph::~ABGraph()
-{
-	
-}
-
 ABList<ABVertex> &ABGraph::getVertecies()
 {
 	return _vertecies;
@@ -66,7 +56,7 @@ void ABGraph::loadGraph(const char *aFileName)
 		ABList<ABVertex>::ABIterator vertexListIterator;
 		for (vertexListIterator = getVertecies().begin(); vertexListIterator != getVertecies().end(); ++vertexListIterator)
 		{
-			if ((*vertexListIterator)._vertex_id == vertexId)
+			if ((*vertexListIterator).getVertexId() == vertexId)
 			{
 				vertex = &(*vertexListIterator);
 				break;
@@ -88,7 +78,7 @@ void ABGraph::loadGraph(const char *aFileName)
 			// { List search
 			for (vertexListIterator = getVertecies().begin(); vertexListIterator != getVertecies().end(); ++vertexListIterator)
 			{
-				if ((*vertexListIterator)._vertex_id == adjacentVertexId)
+				if ((*vertexListIterator).getVertexId() == adjacentVertexId)
 				{
 					adjacentVertex = &(*vertexListIterator);
 					break;
@@ -109,7 +99,7 @@ void ABGraph::loadGraph(const char *aFileName)
 			ABList<ABEdge *>::ABIterator pEdgeListIteratorI;
 			for (pEdgeListIteratorI = (*adjacentVertex).getEdges().begin(); pEdgeListIteratorI != (*adjacentVertex).getEdges().end(); ++pEdgeListIteratorI)
 			{
-				if ((*(*pEdgeListIteratorI))._tail == vertex)
+				if ((*(*pEdgeListIteratorI)).getTail() == vertex)
 				{
 					edge = *pEdgeListIteratorI;
 					break;
@@ -135,12 +125,12 @@ void ABGraph::display()
 	ABList<ABVertex>::ABIterator vertexListIterator;
 	for (vertexListIterator = getVertecies().begin(); vertexListIterator != getVertecies().end(); ++vertexListIterator)
 	{
-		cout << (*vertexListIterator)._vertex_id << " - ";
+		cout << (*vertexListIterator).getVertexId() << " - ";
 		ABList<ABEdge *>::ABIterator lI;
 		for (lI = (*vertexListIterator).getEdges().begin(); lI != (*vertexListIterator).getEdges().end(); ++lI)
 		{
 			ABEdge *edge = *lI;
-			cout << " (" << (*(*edge)._head)._vertex_id << ", " << (*(*edge)._tail)._vertex_id << ") ";
+			cout << " (" << (*(*edge).getHead()).getVertexId() << ", " << (*(*edge).getTail()).getVertexId() << ") ";
 		}
 		cout << endl;
 	}
@@ -150,10 +140,8 @@ void ABGraph::display()
 
 void ABGraph::contractVerteciesForEdge(ABEdge *anEdge)
 {
-	ABVertex *head = (*anEdge)._head;
-	ABVertex *tail = (*anEdge)._tail; // vertex to be contracted
-	
-	//	(*aHead)._contracted_vertecies_ids.pushBack((*aTail)._vertex_id);
+	ABVertex *head = (*anEdge).getHead();
+	ABVertex *tail = (*anEdge).getTail(); // vertex to be contracted
 	
 	// from "aHead"
 	// remove self-loops
@@ -161,7 +149,7 @@ void ABGraph::contractVerteciesForEdge(ABEdge *anEdge)
 	ABList<ABEdge *>::ABIterator pEdgeListIterator;
 	for (pEdgeListIterator = (*head).getEdges().begin(); pEdgeListIterator != (*head).getEdges().end();)
 	{
-		if ((*(*pEdgeListIterator))._head == tail || (*(*pEdgeListIterator))._tail == tail)
+		if ((*(*pEdgeListIterator)).getHead() == tail || (*(*pEdgeListIterator)).getTail() == tail)
 		{
 			pEdgeListIterator = (*head).getEdges().remove(pEdgeListIterator);
 		}
@@ -180,7 +168,7 @@ void ABGraph::contractVerteciesForEdge(ABEdge *anEdge)
 	// remove "anEdge"
 	for (pEdgeListIterator = (*tail).getEdges().begin(); pEdgeListIterator != (*tail).getEdges().end();)
 	{
-		if ((*(*pEdgeListIterator))._head == head || (*(*pEdgeListIterator))._tail == head)
+		if ((*(*pEdgeListIterator)).getHead() == head || (*(*pEdgeListIterator)).getTail() == head)
 		{
 			ABList<ABEdge>::ABIterator edgeListIterator;
 			for (edgeListIterator = getEdges().begin(); edgeListIterator != getEdges().end(); ++edgeListIterator)
@@ -194,13 +182,13 @@ void ABGraph::contractVerteciesForEdge(ABEdge *anEdge)
 		}
 		else
 		{
-			if ((*(*pEdgeListIterator))._head == tail)
+			if ((*(*pEdgeListIterator)).getHead() == tail)
 			{
-				(*(*pEdgeListIterator))._head = head;
+				(*(*pEdgeListIterator)).setHead(head);
 			}
-			else if ((*(*pEdgeListIterator))._tail == tail)
+			else if ((*(*pEdgeListIterator)).getTail() == tail)
 			{
-				(*(*pEdgeListIterator))._tail = head;
+				(*(*pEdgeListIterator)).setTail(head);
 			}
 			(*head).getEdges().pushBack(*pEdgeListIterator);
 		}
@@ -271,20 +259,20 @@ void ABGraphUnitTests(ABGraph &aGraph)
 			for (edgeListIterator = aGraph.getEdges().begin(); edgeListIterator != aGraph.getEdges().end(); ++edgeListIterator)
 			{
 				if (*pEdgeListIterator == &(*edgeListIterator) &&
-					(*(*pEdgeListIterator))._head == (*edgeListIterator)._head &&
-					(*(*pEdgeListIterator))._tail == (*edgeListIterator)._tail &&
-					((*edgeListIterator)._head == &(*vertexListIterator) ||
-					 (*edgeListIterator)._tail == &(*vertexListIterator)))
+					(*(*pEdgeListIterator)).getHead() == (*edgeListIterator).getHead() &&
+					(*(*pEdgeListIterator)).getTail() == (*edgeListIterator).getTail() &&
+					((*edgeListIterator).getHead() == &(*vertexListIterator) ||
+					 (*edgeListIterator).getTail() == &(*vertexListIterator)))
 				{
 					(*edgeListIterator)._entryCount++;
 					
-					if ((*edgeListIterator)._head == &(*vertexListIterator))
+					if ((*edgeListIterator).getHead() == &(*vertexListIterator))
 					{
-						++(*(*edgeListIterator)._tail)._entryCount;
+						++(*(*edgeListIterator).getTail())._entryCount;
 					}
-					else if ((*edgeListIterator)._tail == &(*vertexListIterator))
+					else if ((*edgeListIterator).getTail() == &(*vertexListIterator))
 					{
-						++(*(*edgeListIterator)._head)._entryCount;
+						++(*(*edgeListIterator).getHead())._entryCount;
 					}
 				}
 			}
