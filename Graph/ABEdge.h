@@ -23,6 +23,8 @@ public:
 	ABVertex *getTail();
 	void setHead(ABVertex *aHead);
 	void setTail(ABVertex *aTail);
+	
+	ABVertex *pairedVertexForVertex(ABVertex *aVertex);
 };
 
 

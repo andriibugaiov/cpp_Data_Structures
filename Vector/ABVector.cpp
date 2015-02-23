@@ -45,6 +45,16 @@ ABVector<T>::~ABVector()
 #pragma mark -
 
 template <typename T>
+void ABVector<T>::clear()
+{
+	delete [] _origin;
+	
+	_size = 0;
+	_capacity = VECTOR_INITIAL_CAPACITY;
+	_origin = getCapacity() > 0 ? new T[getCapacity()] : nullptr;
+}
+
+template <typename T>
 void ABVector<T>::reserve(int aCapacity)
 {
 	if (aCapacity <= getCapacity())
@@ -114,7 +124,7 @@ T &ABVector<T>::operator[](int aPosition)
 {
 	if (aPosition >= getSize())
 	{
-		throw invalid_argument("aPosition >= getSize()");
+		throw runtime_error("aPosition >= getSize()");
 	}
 	return _origin[aPosition];
 }
@@ -124,7 +134,7 @@ const T &ABVector<T>::operator[](int aPosition) const
 {
 	if (aPosition >= getSize())
 	{
-		throw invalid_argument("aPosition >= getSize()");
+		throw runtime_error("aPosition >= getSize()");
 	}
 	return _origin[aPosition];
 }
@@ -134,7 +144,7 @@ T &ABVector<T>::last()
 {
 	if (isEmpty())
 	{
-		throw invalid_argument("aPosition >= getSize()");
+		throw runtime_error("Vector is empty!");
 	}
 	return _origin[getSize() - 1];
 }
@@ -144,7 +154,7 @@ const T &ABVector<T>::last() const
 {
 	if (isEmpty())
 	{
-		throw invalid_argument("aPosition >= getSize()");
+		throw runtime_error("Vector is empty!");
 	}
 	return _origin[getSize() - 1];
 }
@@ -170,7 +180,7 @@ void ABVector<T>::insert(int aPosition, const T &aData)
 {
 	if (aPosition > getSize())
 	{
-		throw invalid_argument("aPosition > getSize()");
+		throw runtime_error("aPosition > getSize()");
 	}
 	if (getSize() == getCapacity())
 	{
@@ -191,7 +201,7 @@ T ABVector<T>::remove(int aPosition)
 {
 	if (aPosition >= getSize())
 	{
-		throw invalid_argument("aPosition >= getSize()");
+		throw runtime_error("aPosition >= getSize()");
 	}
 	
 	T retValue = _origin[aPosition];

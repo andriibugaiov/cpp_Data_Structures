@@ -10,30 +10,60 @@
 #define __workplace__ABGraph__
 
 #include "ABList.h"
+#include "ABVector.h"
+
+typedef enum {
+	ABGraphTypeNone,
+	ABGraphTypeUndirected,
+	ABGraphTypeDirected
+} ABGraphType;
 
 class ABVertex;
 class ABEdge;
 
+// TODO: rework ABGraph architecture
 class ABGraph
 {
-	ABList<ABVertex> _vertecies;
-	ABList<ABEdge> _edges;
+	ABGraphType _graph_type;
+	
+	ABList<ABVertex> *_vertecies; // undirected
+	ABList<ABEdge> *_edges; // undirected
 	
 	// algorithms helpers
-	void contractVerteciesForEdge(ABEdge *anEdge);
+	void loadUndirectedGraph(const char *aFileName); // undirected
+	void loadDirectedGraph(const char *aFileName); // directed
 	
+	void contractVerteciesForEdge(ABEdge *anEdge); // undirected
+	void runBFSAlgorithmWithEntryVertex(ABVertex *aVertex); // undirected
+
+	void runDFSAlgorithmWithEntryVertex(ABVertex *aVertex); // directed
+	void runOrderingDFSAlgorithmWithEntryVertex(ABVertex *aVertex); // directed
+	void orderVerteciesInReversedGraph(); // directed
+	void findStronglyConnectedComponents(); // directed
 public:
-	ABList<ABVertex> &getVertecies();
-	ABList<ABEdge> &getEdges();
+	ABVector<ABVertex> *__vertecies; // directed
+	ABList<ABVertex *> *__orderedVertecies; // directed
+	ABVector<ABEdge> *__edges; // directed
 	
-	void loadGraph(const char *aFileName);
-	void display();
+	ABGraph();
+	~ABGraph();
+	
+	ABGraphType getGraphType();
+	
+	ABList<ABVertex> &getVertecies(); // undirected
+	ABList<ABEdge> &getEdges(); // undirected
+	
+	void loadGraph(const char *aFileName, ABGraphType aGraphType);
+	void display(); // undirected
 	
 	//algorithms
-	int minCutContractionAlgorithm();
+	int runKargerContractionAlgorithm(); // undirected
+	void runBFSAlgorithmWithEntryVertexId(int aVertexId); // undirected
+	
+	void runKosarajusTwoPassAlgorithm(); // directed
 };
 
 // TODO: implement adapter class
-void ABGraphUnitTests(ABGraph &aGraph);
+void ABGraphUnitTests(ABGraph &aGraph);// undirected, directed
 
 #endif /* defined(__workplace__ABGraph__) */

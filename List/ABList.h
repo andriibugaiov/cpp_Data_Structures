@@ -59,7 +59,6 @@ public:
 	{
 	protected:
 		ABIterator(ABNodeList<T> *aCurrent);
-		
 	public:
 		ABIterator();
 		
@@ -95,9 +94,8 @@ public:
 	void pushFront(const T &aData);
 	void pushBack(const T &aData);
 
-	// TODO:
-//	void popFront();
-//	void popBack();
+	void popFront();
+	void popBack();
 
 	ABIterator insert(ABIterator anInterator, const T &aData);
 	ABIterator remove(ABIterator anInterator);

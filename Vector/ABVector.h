@@ -9,19 +9,22 @@
 #ifndef __workplace__ABVector__
 #define __workplace__ABVector__
 
+#define VECTOR_INITIAL_CAPACITY 8
+
 template <typename T>
 class ABVector
 {
 	int _size;
 	int _capacity;
 	T *_origin;
-	
-	void reserve(int aCapacity);
 public:
-	ABVector(int aCapacity = 8);
+	ABVector(int aCapacity = VECTOR_INITIAL_CAPACITY);
 	ABVector(const ABVector<T> &anOther);
 	~ABVector();
-
+	
+	void clear();
+	void reserve(int aCapacity);
+	
 	int getSize() const;
 	int getCapacity() const;
 	bool isEmpty() const;

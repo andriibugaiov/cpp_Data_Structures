@@ -137,7 +137,7 @@ ABList<T>::ABIterator::ABIterator(ABNodeList<T> *aCurrent) : ABConstIterator(aCu
 }
 
 template <typename T>
-ABList<T>::ABIterator::ABIterator()
+ABList<T>::ABIterator::ABIterator() : ABConstIterator()
 {
 	
 }
@@ -289,8 +289,24 @@ void ABList<T>::pushBack(const T &aData)
 }
 
 template <typename T>
+void ABList<T>::popFront()
+{
+	remove(ABIterator(begin()));
+}
+
+template <typename T>
+void ABList<T>::popBack()
+{
+	remove(ABIterator(--end()));
+}
+
+template <typename T>
 typename ABList<T>::ABIterator ABList<T>::insert(ABIterator anInterator, const T &aData)
 {
+//	if ()
+//	{
+//		throw runtime_error("");
+//	}
 	ABNodeList<T> *next = anInterator.getCurrent();
 	
 	ABNodeList<T> *previous = next -> getPrevious();
@@ -306,6 +322,10 @@ typename ABList<T>::ABIterator ABList<T>::insert(ABIterator anInterator, const T
 template <typename T>
 typename ABList<T>::ABIterator ABList<T>::remove(ABIterator anInterator)
 {
+	if (isEmpty())
+	{
+		throw runtime_error("List is empty!");
+	}
 	ABNodeList<T> *node = anInterator.getCurrent();
 	
 	ABNodeList<T> *next = node -> getNext();

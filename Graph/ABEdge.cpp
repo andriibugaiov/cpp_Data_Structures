@@ -31,3 +31,16 @@ void ABEdge::setTail(ABVertex *aTail)
 {
 	_tail = aTail;
 }
+
+ABVertex *ABEdge::pairedVertexForVertex(ABVertex *aVertex)
+{
+	if (aVertex == getHead())
+	{
+		return getTail();
+	}
+	else if (aVertex == getTail())
+	{
+		return getHead();
+	}
+	return nullptr;
+}
