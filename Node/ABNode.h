@@ -10,7 +10,8 @@
 #define __workplace__ABNode__
 
 template <typename T>
-class ABNode {
+class ABNode
+{
 	T _data;
 public:
 	ABNode();

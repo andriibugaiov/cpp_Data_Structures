@@ -8,8 +8,8 @@
 
 #include <iostream>
 
-#include "ABGraph.h"
-
+#include "ABUndirectedGraph.h"
+#include "ABDirectedGraph.h"
 
 #define KOSARAJUS_TWO_PASS_ALGORITHM "/Users/andriibugaiov/My_Projects/Algorithms_DataStructures/cpp_Data_Structures/Graph/KosarajusTwoPassAlgorithm_StronglyConnectedComponentsSearch.txt"
 #define BREADTH_FIRST_SEARCH_ALGORITHM "/Users/andriibugaiov/My_Projects/Algorithms_DataStructures/cpp_Data_Structures/Graph/BreadthFirstSearchAlgorithm.txt"
@@ -19,29 +19,31 @@ using namespace std;
 
 int main()
 {
-	ABGraph g;
 
 #if 1
+	ABDirectedGraph g;
 	const char *fileName = KOSARAJUS_TWO_PASS_ALGORITHM;
-	g.loadGraph(fileName, ABGraphTypeDirected);
+	g.loadGraph(fileName);
 	g.runKosarajusTwoPassAlgorithm();
 #endif
 	
 #if 0
+	ABUndirectedGraph g;
 	const char *fileName = BREADTH_FIRST_SEARCH_ALGORITHM;
-	g.loadGraph(fileName, ABGraphTypeUndirected);
-	ABGraphUnitTests(g);
+	g.loadGraph(fileName);
+	ABUndirectedGraphUnitTests(g);
 	g.runBFSAlgorithmWithEntryVertexId(1);
 #endif
 
 #if 0
+	ABUndirectedGraph g;
 	const char *fileName = KARGER_CONTRACTION_ALGORITHM;
 	int minCut = INT32_MAX;
 	int i;
 	for (i = 0; i < 40; ++i)
  	{
-		g.loadGraph(fileName, ABGraphTypeUndirected);
-		ABGraphUnitTests(g);
+		g.loadGraph(fileName);
+		ABUndirectedGraphUnitTests(g);
 		
 		int result = g.runKargerContractionAlgorithm();
 		minCut = result < minCut ? result : minCut;

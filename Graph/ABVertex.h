@@ -13,38 +13,37 @@
 
 class ABEdge;
 
-// TODO: rework ABVertex architecture
 class ABVertex
 {
 	int _vertex_id;
-	ABList<ABEdge *> _edges; // undirected
+	ABList<ABEdge *> _edges; // undirected/directed
+	ABList<ABEdge *> _reversed_edges; // directed
 	
 	// algorithms specific data
 	int _bfs_layer_number; // undirected
 	int _dfs_order_number; // directed
 	ABVertex *_dfs_vertex_leader; // directed
 public:
-	ABList<ABEdge *> __edges; // directed
-	
 	// tests specific data
-	int _entryCount; // undirected
+	int _entryCount; // undirected/directed
 	
 	ABVertex(int aVertexId = -1);
 	
 	int getVertexId();
 	ABList<ABEdge *> &getEdges();
+	ABList<ABEdge *> &getReversedEdges();
 	
-	int getBFSLayerNumber(); // undirected
-	void setBFSLayerNumber(int aBFSLayerNumber); // undirected
-	bool isExploredBFS(); // undirected
+	int getBFSLayerNumber();
+	void setBFSLayerNumber(int aBFSLayerNumber);
+	bool isExploredBFS();
 	
-	int getDFSOrderNumber(); // directed
-	void setDFSOrderNumber(int aDFSOrderNumber); // directed
-	bool isExploredDFS(); // directed
+	int getDFSOrderNumber();
+	void setDFSOrderNumber(int aDFSOrderNumber);
+	bool isExploredDFS();
 	
-	ABVertex *getDFSVertexLeader(); // directed
-	void setDFSVertexLeader(ABVertex *aDFSVertexLeader); // directed
-	bool isExploredDFSVertexLeader(); // directed
+	ABVertex *getDFSVertexLeader();
+	void setDFSVertexLeader(ABVertex *aDFSVertexLeader);
+	bool isExploredDFSVertexLeader();
 };
 
 #endif /* defined(__workplace__ABVertex__) */

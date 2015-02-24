@@ -22,6 +22,11 @@ ABList<ABEdge *> &ABVertex::getEdges()
 	return _edges;
 }
 
+ABList<ABEdge *> &ABVertex::getReversedEdges()
+{
+	return _reversed_edges;
+}
+
 #pragma mark -
 
 int ABVertex::getBFSLayerNumber()

@@ -16,7 +16,8 @@ template <typename T>
 class ABNode;
 
 template <typename T>
-class ABNodeList : public ABNode<T> {
+class ABNodeList : public ABNode<T>
+{
 	ABNodeList<T> *_next;
 	ABNodeList<T> *_previous;
 	
