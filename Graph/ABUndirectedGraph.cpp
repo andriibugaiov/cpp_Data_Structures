@@ -160,11 +160,10 @@ void ABUndirectedGraph::loadGraph(const char *aFileName)
 void ABUndirectedGraph::contractVerteciesForEdge(ABEdge *anEdge)
 {
 	ABVertex *head = (*anEdge).getHead();
-	ABVertex *tail = (*anEdge).getTail(); // vertex to be contracted
+	// vertex to be contracted
+	ABVertex *tail = (*anEdge).getTail();
 	
-	// from "aHead"
-	// remove self-loops
-	// remove "anEdge"
+	// from "aHead"; remove self-loops; remove "anEdge"
 	ABList<ABEdge *>::ABIterator pEdgeListIterator;
 	for (pEdgeListIterator = (*head).getEdges().begin(); pEdgeListIterator != (*head).getEdges().end();)
 	{
@@ -178,13 +177,8 @@ void ABUndirectedGraph::contractVerteciesForEdge(ABEdge *anEdge)
 		}
 	}
 	
-	// from "aTail" to "aHead"
-	// avoid adding self-loops
-	// avoid adding "anEdge"
-	
-	// from "_edges"
-	// remove self-loops
-	// remove "anEdge"
+	// from "aTail" to "aHead"; avoid adding self-loops; avoid adding "anEdge"
+	// from "_edges"; remove self-loops; remove "anEdge"
 	for (pEdgeListIterator = (*tail).getEdges().begin(); pEdgeListIterator != (*tail).getEdges().end();)
 	{
 		if ((*(*pEdgeListIterator)).getHead() == head || (*(*pEdgeListIterator)).getTail() == head)
@@ -214,8 +208,7 @@ void ABUndirectedGraph::contractVerteciesForEdge(ABEdge *anEdge)
 		pEdgeListIterator = (*tail).getEdges().remove(pEdgeListIterator);
 	}
 	
-	// from "_vertecies"
-	// remove "tail"
+	// from "_vertecies"; remove "tail"
 	ABList<ABVertex>::ABIterator vertexListIterator;
 	for (vertexListIterator = getVertecies().begin(); vertexListIterator != getVertecies().end(); ++vertexListIterator)
 	{
@@ -234,7 +227,7 @@ int ABUndirectedGraph::runKargerContractionAlgorithm()
 	{
 		if (!getEdges().getSize())
 		{
-			throw runtime_error("Edges count cannot be zero.");
+			throw runtime_error("Edges size count cannot be zero.");
 		}
 		
 		int randomIndex = rand() % getEdges().getSize();
@@ -249,7 +242,7 @@ int ABUndirectedGraph::runKargerContractionAlgorithm()
 	}
 	
 #if 1 // tests
-	if ( getVertecies().getSize() != 2 ||
+	if (getVertecies().getSize() != 2 ||
 		getVertecies().front().getEdges().getSize() != getEdges().getSize() ||
 		getVertecies().back().getEdges().getSize() != getEdges().getSize())
 	{
@@ -280,7 +273,7 @@ void ABUndirectedGraph::runBFSAlgorithmWithEntryVertex(ABVertex *aVertex)
 		ABList<ABEdge *>::ABIterator pEdgeListIterator;
 		for (pEdgeListIterator = (*vertex).getEdges().begin(); pEdgeListIterator != (*vertex).getEdges().end(); ++pEdgeListIterator)
 		{
-			pairedVertex = (*(*pEdgeListIterator)).pairedVertexForVertex(vertex);
+			pairedVertex = (*(*pEdgeListIterator)).getPairedVertexForVertex(vertex);
 			if (!(*pairedVertex).isExploredBFS())
 			{
 				(*pairedVertex).setBFSLayerNumber((*vertex).getBFSLayerNumber() + 1);
@@ -296,11 +289,6 @@ void ABUndirectedGraph::runBFSAlgorithmWithEntryVertex(ABVertex *aVertex)
 		if (!(*vertexListIterator).isExploredBFS())
 		{
 			throw runtime_error("Test failed.");
-		}
-		else
-		{
-			cout << "Id: " << (*vertexListIterator).getVertexId()
-			<< " Layer number: " << (*vertexListIterator).getBFSLayerNumber() << endl;
 		}
 	}
 #endif

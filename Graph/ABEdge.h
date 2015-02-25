@@ -10,11 +10,13 @@
 #define __workplace__ABEdge__
 
 class ABVertex;
+
 class ABEdge
 {
 	ABVertex *_head;
 	ABVertex *_tail;
 public:
+	// tests specific data
 	int _entryCount;
 	
 	ABEdge(ABVertex *aHead = nullptr, ABVertex *aTail = nullptr);
@@ -24,7 +26,7 @@ public:
 	void setHead(ABVertex *aHead);
 	void setTail(ABVertex *aTail);
 	
-	ABVertex *pairedVertexForVertex(ABVertex *aVertex);
+	ABVertex *getPairedVertexForVertex(ABVertex *aVertex);
 };
 
 

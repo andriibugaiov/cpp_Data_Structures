@@ -20,12 +20,17 @@ class ABDirectedGraph : public ABGraph
 {
 	ABVector<ABVertex> *_vertecies;
 	ABVector<ABEdge> *_edges;
-		
+	ABList<ABVertex *> *_ordered_vertecies;
+	
+	ABList<ABVertex *> &getOrderedVertecies();
+	
 	// algorithms helpers
+	void runDFSAlgorithmWithEntryVertexTEMP(ABVertex *aVertex);
 	void runDFSAlgorithmWithEntryVertex(ABVertex *aVertex);
 	void orderVerteciesInReversedGraph();
 	void findStronglyConnectedComponents();
 public:
+	
 	ABDirectedGraph();
 	~ABDirectedGraph();
 	

@@ -21,7 +21,7 @@ using namespace std;
 #define EDGES_NUMBER 5105043
 #define VERTECIES_NUMBER 875714
 
-ABDirectedGraph::ABDirectedGraph() : ABGraph(), _vertecies(nullptr), _edges(nullptr)
+ABDirectedGraph::ABDirectedGraph() : ABGraph(), _vertecies(nullptr), _edges(nullptr), _ordered_vertecies(nullptr)
 {
 }
 
@@ -34,6 +34,10 @@ ABDirectedGraph::~ABDirectedGraph()
 	if (_edges != nullptr)
 	{
 		delete _edges;
+	}
+	if (_ordered_vertecies != nullptr)
+	{
+		delete _ordered_vertecies;
 	}
 }
 
@@ -53,6 +57,15 @@ ABVector<ABEdge> &ABDirectedGraph::getEdges()
 		_edges = new ABVector<ABEdge>(EDGES_NUMBER);
 	}
 	return *_edges;
+}
+
+ABList<ABVertex *> &ABDirectedGraph::getOrderedVertecies()
+{
+	if (_ordered_vertecies == nullptr)
+	{
+		_ordered_vertecies = new ABList<ABVertex *>();
+	}
+	return *_ordered_vertecies;
 }
 
 #pragma mark -
@@ -108,8 +121,10 @@ void ABDirectedGraph::loadGraph(const char *aFileName)
 	filestream.close();
 	
 #if 1 // tests
-	if (getVertecies().getSize() != VERTECIES_NUMBER || getEdges().getSize() != EDGES_NUMBER ||
-		getVertecies().getCapacity() != VERTECIES_NUMBER || getEdges().getCapacity() != EDGES_NUMBER)
+	if (getVertecies().getSize() != VERTECIES_NUMBER ||
+		getEdges().getSize() != EDGES_NUMBER ||
+		getVertecies().getCapacity() != VERTECIES_NUMBER ||
+		getEdges().getCapacity() != EDGES_NUMBER)
 	{
 		throw runtime_error("Test failed.");
 	}
@@ -120,45 +135,75 @@ void ABDirectedGraph::loadGraph(const char *aFileName)
 
 static int dfs_order_number = 0;
 static ABVertex *dfs_vertex_leader = nullptr;
-static ABList<ABVertex *> *ordered_vertecies = nullptr;
+
+void ABDirectedGraph::runDFSAlgorithmWithEntryVertexTEMP(ABVertex *aVertex)
+{
+#if 1
+	ABList<ABVertex *> stack;
+
+	ABVertex *pairedVertex = nullptr;
+	ABVertex *vertex = aVertex;
+	(*vertex).setDFSOrderNumber(0);
+	stack.pushBack(vertex);
+
+	while (!stack.isEmpty())
+	{
+		vertex = stack.back();
+		stack.popBack();
+
+		ABList<ABEdge *>::ABIterator pEdgeListIterator;
+		for (pEdgeListIterator = (*vertex).getReversedEdges().begin(); pEdgeListIterator != (*vertex).getReversedEdges().end(); ++pEdgeListIterator)
+		{
+			// traverse graph in reversed order
+			pairedVertex = (*(*pEdgeListIterator)).getTail();
+			if (!(*pairedVertex).isExploredDFS())
+			{
+				(*pairedVertex).setDFSOrderNumber(0);
+				stack.pushBack(pairedVertex);
+			}
+		}
+	}
+#else
+	(*aVertex).setDFSOrderNumber(0);
+	
+	for (ABList<ABEdge *>::ABIterator pEdgeListIterator = (*aVertex).getReversedEdges().begin(); pEdgeListIterator != (*aVertex).getReversedEdges().end(); ++pEdgeListIterator)
+	{
+		// traverse graph in reversed order
+		ABVertex *tail = (*(*pEdgeListIterator)).getTail();
+		if (!(*tail).isExploredDFS())
+		{
+			runDFSAlgorithmWithEntryVertexTEMP(tail);
+		}
+	}
+	
+	++dfs_order_number;
+	(*aVertex).setDFSOrderNumber(dfs_order_number);
+	getOrderedVertecies().pushFront(aVertex);
+#endif
+}
 
 void ABDirectedGraph::runDFSAlgorithmWithEntryVertex(ABVertex *aVertex)
 {
-	if (dfs_vertex_leader == nullptr)
+	ABList<ABVertex *> stack;
+	
+	ABVertex *pairedVertex = nullptr;
+	ABVertex *vertex = aVertex;
+	(*vertex).setDFSVertexLeader(dfs_vertex_leader);
+	stack.pushBack(vertex);
+	
+	while (!stack.isEmpty())
 	{
-		// just to let others know that the vertex has been explored
-		// but the order number has not been assigned yet
-		(*aVertex).setDFSOrderNumber(0);
+		vertex = stack.back();
+		stack.popBack();
 		
-		for (ABList<ABEdge *>::ABIterator pEdgeListIterator = (*aVertex).getReversedEdges().begin(); pEdgeListIterator != (*aVertex).getReversedEdges().end(); ++pEdgeListIterator)
+		ABList<ABEdge *>::ABIterator pEdgeListIterator;
+		for (pEdgeListIterator = (*vertex).getEdges().begin(); pEdgeListIterator != (*vertex).getEdges().end(); ++pEdgeListIterator)
 		{
-			if ((*(*pEdgeListIterator)).getHead() != aVertex)
+			pairedVertex = (*(*pEdgeListIterator)).getHead();
+			if (!(*pairedVertex).isExploredDFSVertexLeader())
 			{
-				throw runtime_error("Test failed.");
-			}
-			
-			// traverse graph in reversed order
-			ABVertex *tail = (*(*pEdgeListIterator)).getTail();
-			if (!(*tail).isExploredDFS())
-			{
-				runDFSAlgorithmWithEntryVertex(tail);
-			}
-		}
-		
-		++dfs_order_number;
-		(*aVertex).setDFSOrderNumber(dfs_order_number);
-		(*ordered_vertecies).pushFront(aVertex);
-	}
-	else
-	{
-		(*aVertex).setDFSVertexLeader(dfs_vertex_leader);
-		
-		for (ABList<ABEdge *>::ABIterator pEdgeListIterator = (*aVertex).getEdges().begin(); pEdgeListIterator != (*aVertex).getEdges().end(); ++pEdgeListIterator)
-		{
-			ABVertex *head = (*(*pEdgeListIterator)).getHead();
-			if (!(*head).isExploredDFSVertexLeader())
-			{
-				runDFSAlgorithmWithEntryVertex(head);
+				(*pairedVertex).setDFSVertexLeader(dfs_vertex_leader);
+				stack.pushBack(pairedVertex);
 			}
 		}
 	}
@@ -174,7 +219,7 @@ void ABDirectedGraph::orderVerteciesInReversedGraph()
 	{
 		if (!(*vertexVectorIterator).isExploredDFS())
 		{
-			runDFSAlgorithmWithEntryVertex(&(*vertexVectorIterator));
+			runDFSAlgorithmWithEntryVertexTEMP(&(*vertexVectorIterator));
 		}
 	}
 #else
@@ -183,15 +228,15 @@ void ABDirectedGraph::orderVerteciesInReversedGraph()
 		ABVertex *vetrex = &getVertecies()[i];
 		if (!(*vetrex).isExploredDFS())
 		{
-			runOrderingDFSAlgorithmWithEntryVertex(vetrex);
+			runDFSAlgorithmWithEntryVertexTEMP(vetrex);
 		}
 	}
 #endif
 	
 #if 1 // tests
-	ABList<ABVertex *>::ABIterator pVertexListIterator = (*ordered_vertecies).begin();
+	ABList<ABVertex *>::ABIterator pVertexListIterator = getOrderedVertecies().begin();
 	++pVertexListIterator;
-	for (; pVertexListIterator != (*ordered_vertecies).end(); ++pVertexListIterator)
+	for (; pVertexListIterator != getOrderedVertecies().end(); ++pVertexListIterator)
 	{
 		--pVertexListIterator;
 		if (!(*(*pVertexListIterator)).isExploredDFS())
@@ -213,9 +258,10 @@ void ABDirectedGraph::orderVerteciesInReversedGraph()
 		}
 	}
 	
-	if ((*ordered_vertecies).getSize() != VERTECIES_NUMBER || dfs_order_number != VERTECIES_NUMBER ||
-		(*(*ordered_vertecies).front()).getDFSOrderNumber() != VERTECIES_NUMBER ||
-		(*(*ordered_vertecies).back()).getDFSOrderNumber() != 1)
+	if (getOrderedVertecies().getSize() != VERTECIES_NUMBER ||
+		dfs_order_number != VERTECIES_NUMBER ||
+		(*getOrderedVertecies().front()).getDFSOrderNumber() != VERTECIES_NUMBER ||
+		(*getOrderedVertecies().back()).getDFSOrderNumber() != 1)
 	{
 		throw runtime_error("Test failed.");
 	}
@@ -227,34 +273,23 @@ void ABDirectedGraph::orderVerteciesInReversedGraph()
 void ABDirectedGraph::findStronglyConnectedComponents()
 {
 	ABList<ABVertex *>::ABIterator pVertexListIterator;
-	for (pVertexListIterator = (*ordered_vertecies).begin(); pVertexListIterator != (*ordered_vertecies).end();)
+	for (pVertexListIterator = getOrderedVertecies().begin(); pVertexListIterator != getOrderedVertecies().end();)
 	{
 		if (!(*(*pVertexListIterator)).isExploredDFSVertexLeader())
 		{
 			dfs_vertex_leader = *pVertexListIterator;
 			runDFSAlgorithmWithEntryVertex(*pVertexListIterator);
 		}
-		pVertexListIterator = (*ordered_vertecies).remove(pVertexListIterator);
+		pVertexListIterator = getOrderedVertecies().remove(pVertexListIterator);
 	}
 	
 	ABVector<ABVertex>::ABIterator vertexVectorIterator;
-	
-#if 1 // tests
-	for (vertexVectorIterator = getVertecies().begin(); vertexVectorIterator != getVertecies().end(); ++vertexVectorIterator)
-	{
-		if (!(*vertexVectorIterator).isExploredDFSVertexLeader())
-		{
-			throw runtime_error("Test failed.");
-		}
-	}
-#endif
-	
 	for (vertexVectorIterator = getVertecies().begin(); vertexVectorIterator != getVertecies().end(); ++vertexVectorIterator)
 	{
 		++(*(*vertexVectorIterator).getDFSVertexLeader())._entryCount;
 	}
 	
-	
+	// TODO:
 	int max_scc_count[5] = {0};
 	
 	for (vertexVectorIterator = getVertecies().begin(); vertexVectorIterator != getVertecies().end(); ++vertexVectorIterator)
@@ -284,10 +319,6 @@ void ABDirectedGraph::findStronglyConnectedComponents()
 void ABDirectedGraph::runKosarajusTwoPassAlgorithm()
 {
 	dfs_order_number = 0;
-	if (ordered_vertecies == nullptr)
-	{
-		ordered_vertecies = new ABList<ABVertex *>();
-	}
 	dfs_vertex_leader = nullptr;
 	
 	// "1st pass"
@@ -295,11 +326,6 @@ void ABDirectedGraph::runKosarajusTwoPassAlgorithm()
 	
 	// "2nd pass"
 	findStronglyConnectedComponents();
-	
-	dfs_order_number = 0;
-	delete ordered_vertecies;
-	ordered_vertecies = nullptr;
-	dfs_vertex_leader = nullptr;
 }
 
 #pragma mark -

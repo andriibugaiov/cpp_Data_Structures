@@ -32,7 +32,7 @@ void ABEdge::setTail(ABVertex *aTail)
 	_tail = aTail;
 }
 
-ABVertex *ABEdge::pairedVertexForVertex(ABVertex *aVertex)
+ABVertex *ABEdge::getPairedVertexForVertex(ABVertex *aVertex)
 {
 	if (aVertex == getHead())
 	{

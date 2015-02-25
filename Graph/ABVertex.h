@@ -16,7 +16,7 @@ class ABEdge;
 class ABVertex
 {
 	int _vertex_id;
-	ABList<ABEdge *> _edges; // undirected/directed
+	ABList<ABEdge *> _edges; // undirected / directed
 	ABList<ABEdge *> _reversed_edges; // directed
 	
 	// algorithms specific data
@@ -25,7 +25,7 @@ class ABVertex
 	ABVertex *_dfs_vertex_leader; // directed
 public:
 	// tests specific data
-	int _entryCount; // undirected/directed
+	int _entryCount; // undirected / directed
 	
 	ABVertex(int aVertexId = -1);
 	
