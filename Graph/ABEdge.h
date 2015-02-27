@@ -17,7 +17,7 @@ class ABEdge
 	ABVertex *_tail;
 public:
 	// tests specific data
-	int _entryCount;
+	int _counter;
 	
 	ABEdge(ABVertex *aHead = nullptr, ABVertex *aTail = nullptr);
 	

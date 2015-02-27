@@ -8,7 +8,7 @@
 
 #include "ABEdge.h"
 
-ABEdge::ABEdge(ABVertex *aHead, ABVertex *aTail) : _head(aHead), _tail(aTail), _entryCount(0)
+ABEdge::ABEdge(ABVertex *aHead, ABVertex *aTail) : _head(aHead), _tail(aTail), _counter(0)
 {
 }
 

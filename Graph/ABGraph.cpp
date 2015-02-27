@@ -7,27 +7,3 @@
 //
 
 #include "ABGraph.h"
-
-ABGraph::ABGraph()
-{
-}
-
-ABGraph::~ABGraph()
-{
-}
-
-#pragma mark -
-
-void ABGraph::loadGraph(const char *aFileName)
-{
-}
-
-void ABGraph::display()
-{
-}
-
-#pragma mark -
-
-void ABGraphUnitTests(ABGraph &aGraph)
-{	
-}

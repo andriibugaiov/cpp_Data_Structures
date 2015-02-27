@@ -21,14 +21,6 @@ class ABDirectedGraph : public ABGraph
 	ABVector<ABVertex> *_vertecies;
 	ABVector<ABEdge> *_edges;
 	ABList<ABVertex *> *_ordered_vertecies;
-	
-	ABList<ABVertex *> &getOrderedVertecies();
-	
-	// algorithms helpers
-	void runDFSAlgorithmWithEntryVertexTEMP(ABVertex *aVertex);
-	void runDFSAlgorithmWithEntryVertex(ABVertex *aVertex);
-	void orderVerteciesInReversedGraph();
-	void findStronglyConnectedComponents();
 public:
 	
 	ABDirectedGraph();
@@ -36,12 +28,10 @@ public:
 	
 	ABVector<ABVertex> &getVertecies();
 	ABVector<ABEdge> &getEdges();
+	ABList<ABVertex *> &getOrderedVertecies();
 	
 	void loadGraph(const char *aFileName);
 	void display();
-	
-	//algorithms
-	void runKosarajusTwoPassAlgorithm();
 };
 
 // TODO: implement adapter class

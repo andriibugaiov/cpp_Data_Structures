@@ -19,10 +19,6 @@ class ABUndirectedGraph : public ABGraph
 {
 	ABList<ABVertex> *_vertecies;
 	ABList<ABEdge> *_edges;
-	
-	// algorithms helpers
-	void contractVerteciesForEdge(ABEdge *anEdge);
-	void runBFSAlgorithmWithEntryVertex(ABVertex *aVertex);
 public:
 	ABUndirectedGraph();
 	~ABUndirectedGraph();
@@ -32,9 +28,6 @@ public:
 	
 	void loadGraph(const char *aFileName);
 	void display();
-	
-	int runKargerContractionAlgorithm();
-	void runBFSAlgorithmWithEntryVertexId(int aVertexId);
 };
 
 // TODO: implement adapter class

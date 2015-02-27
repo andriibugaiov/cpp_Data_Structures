@@ -25,7 +25,7 @@ class ABVertex
 	ABVertex *_dfs_vertex_leader; // directed
 public:
 	// tests specific data
-	int _entryCount; // undirected / directed
+	int _counter; // undirected / directed
 	
 	ABVertex(int aVertexId = -1);
 	
@@ -35,11 +35,11 @@ public:
 	
 	int getBFSLayerNumber();
 	void setBFSLayerNumber(int aBFSLayerNumber);
-	bool isExploredBFS();
+	bool isExploredBFSLayerNumber();
 	
 	int getDFSOrderNumber();
 	void setDFSOrderNumber(int aDFSOrderNumber);
-	bool isExploredDFS();
+	bool isExploredDFSOrderNumber();
 	
 	ABVertex *getDFSVertexLeader();
 	void setDFSVertexLeader(ABVertex *aDFSVertexLeader);

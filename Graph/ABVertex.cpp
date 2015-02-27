@@ -8,7 +8,7 @@
 
 #include "ABVertex.h"
 
-ABVertex::ABVertex(int aVertexId) : _vertex_id(aVertexId), _entryCount(0), _bfs_layer_number(-1), _dfs_order_number(-1), _dfs_vertex_leader(nullptr)
+ABVertex::ABVertex(int aVertexId) : _vertex_id(aVertexId), _counter(0), _bfs_layer_number(-1), _dfs_order_number(-1), _dfs_vertex_leader(nullptr)
 {
 }
 
@@ -39,7 +39,7 @@ void ABVertex::setBFSLayerNumber(int aBFSLayerNumber)
 	_bfs_layer_number = aBFSLayerNumber;
 }
 
-bool ABVertex::isExploredBFS()
+bool ABVertex::isExploredBFSLayerNumber()
 {
 	return getBFSLayerNumber() != -1;
 }
@@ -56,7 +56,7 @@ void ABVertex::setDFSOrderNumber(int aDFSOrderNumber)
 	_dfs_order_number = aDFSOrderNumber;
 }
 
-bool ABVertex::isExploredDFS()
+bool ABVertex::isExploredDFSOrderNumber()
 {
 	return getDFSOrderNumber() != -1;
 }

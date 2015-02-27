@@ -12,11 +12,8 @@
 class ABGraph
 {
 public:
-	ABGraph();
-	~ABGraph();
-
-	virtual void loadGraph(const char *aFileName);
-	virtual void display();
+	virtual void loadGraph(const char *aFileName) = 0;
+	virtual void display() = 0;
 };
 
 // TODO: implement adapter class
