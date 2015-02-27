@@ -52,7 +52,6 @@ public:
 	ABConstIterator end() const;
 };
 
-// TODO: implement adapter class
 void ABVectorUnitTests(ABVector<int *> aVector);
 
 #endif /* defined(__workplace__Vector__) */

@@ -102,7 +102,6 @@ public:
 	ABIterator remove(ABIterator aStart, ABIterator anEnd);
 };
 
-// TODO: implement adapter class
 void ABListUnitTests(ABList<int *> aList);
 
 #endif /* defined(__workplace__ABList__) */

@@ -30,7 +30,6 @@ public:
 	void display();
 };
 
-// TODO: implement adapter class
 void ABUndirectedGraphUnitTests(ABUndirectedGraph &aGraph);
 
 #endif /* defined(__workplace__ABUndirectedGraph__) */

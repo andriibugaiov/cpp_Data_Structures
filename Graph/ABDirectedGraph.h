@@ -34,7 +34,6 @@ public:
 	void display();
 };
 
-// TODO: implement adapter class
 void ABDirectedGraphUnitTests(ABDirectedGraph &aGraph);
 
 #endif /* defined(__workplace__ABDirectedGraph__) */
