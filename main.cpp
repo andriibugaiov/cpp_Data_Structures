@@ -13,9 +13,9 @@
 
 #include "ABGraphAlgorithm.h"
 
-#define KOSARAJUS_TWO_PASS_ALGORITHM "/Users/andriibugaiov/My_Projects/Algorithms_DataStructures/cpp_Data_Structures/Graph/KosarajusTwoPassAlgorithm_StronglyConnectedComponentsSearch.txt"
-#define BREADTH_FIRST_SEARCH_ALGORITHM "/Users/andriibugaiov/My_Projects/Algorithms_DataStructures/cpp_Data_Structures/Graph/BreadthFirstSearchAlgorithm.txt"
-#define KARGER_CONTRACTION_ALGORITHM "/Users/andriibugaiov/My_Projects/Algorithms_DataStructures/cpp_Data_Structures/Graph/KargerContractionAlgorithm_MinCutSearch.txt"
+#define KOSARAJUS_TWO_PASS_ALGORITHM "KosarajusTwoPassAlgorithm_StronglyConnectedComponentsSearch.txt"
+#define BREADTH_FIRST_SEARCH_ALGORITHM "BreadthFirstSearchAlgorithm.txt"
+#define KARGER_CONTRACTION_ALGORITHM "KargerContractionAlgorithm_MinCutSearch.txt"
 
 using namespace std;
 
