@@ -257,6 +257,12 @@ const T &ABList<T>::back() const
 #pragma mark -
 
 template <typename T>
+void ABList<T>::clear()
+{
+    remove(begin(), end());
+}
+
+template <typename T>
 int ABList<T>::getSize() const
 {
 	return _size;
@@ -266,12 +272,6 @@ template <typename T>
 bool ABList<T>::isEmpty() const
 {
 	return getSize() == 0;
-}
-
-template <typename T>
-void ABList<T>::clear()
-{
-	remove(begin(), end());
 }
 
 #pragma mark -

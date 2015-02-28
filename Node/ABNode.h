@@ -16,7 +16,9 @@ class ABNode
 public:
 	ABNode();
 	ABNode(const T &aData);
-	T &getData();
+    
+    T &getData();
+	const T &getData() const;
 };
 
 #endif /* defined(__workplace__ABNode__) */

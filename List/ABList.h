@@ -87,9 +87,10 @@ public:
 	T &back();
 	const T &back() const;
 	
+    void clear();
+    
 	int getSize() const;
 	bool isEmpty() const;
-	void clear();
 
 	void pushFront(const T &aData);
 	void pushBack(const T &aData);

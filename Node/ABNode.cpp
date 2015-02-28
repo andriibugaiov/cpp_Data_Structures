@@ -23,10 +23,17 @@ ABNode<T>::ABNode(const T &aData) : _data(aData)
 }
 
 template <typename T>
-T & ABNode<T>::getData()
+T &ABNode<T>::getData()
 {
 	return _data;
 }
+
+template <typename T>
+const T &ABNode<T>::getData() const
+{
+    return _data;
+}
+
 
 #pragma mark -
 

@@ -42,8 +42,8 @@ public:
 	void insert(int aPosition, const T &aData);
 	T remove(int aPosition);
 	
-	typedef T * ABIterator;
-	typedef const T * ABConstIterator;
+	typedef T *ABIterator;
+	typedef const T *ABConstIterator;
 	
 	ABIterator begin();
 	ABConstIterator begin() const;
