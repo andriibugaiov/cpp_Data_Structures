@@ -22,17 +22,24 @@ class ABHeapTree
     
     void percolateUp(int anIndex);
     void percolateDown(int anIndex);
+	
+	ABNodeHeapTree<T> removeRootNode();
+	
+	int search(const T &aData);
 public:
     ABHeapTree();
-    ABHeapTree(const ABVector<T> aItems);
     
     int getSize() const;
     bool isEmpty() const;
     
     void insert(const T &aData, int aKey);
     T removeRoot();
+	
+	void increaseKey(const T &aData, int aDelta);
+	void decreaseKey(const T &aData, int aDelta);
+	
+	friend void ABHeapTreeUnitTests(ABHeapTree<int> &aTree);
 };
 
-void ABHeapTreeUnitTests(ABHeapTree<int *> aTree);
 
 #endif /* defined(__workplace__ABHeapTree__) */

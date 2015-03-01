@@ -28,8 +28,8 @@ public:
 	
 	void loadGraph(const char *aFileName);
 	void display();
+	
+ 	friend void ABUndirectedGraphUnitTests(ABUndirectedGraph &aGraph);
 };
-
-void ABUndirectedGraphUnitTests(ABUndirectedGraph &aGraph);
 
 #endif /* defined(__workplace__ABUndirectedGraph__) */

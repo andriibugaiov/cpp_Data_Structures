@@ -16,13 +16,21 @@
 #define KOSARAJUS_TWO_PASS_ALGORITHM "KosarajusTwoPassAlgorithm_StronglyConnectedComponentsSearch.txt"
 #define BREADTH_FIRST_SEARCH_ALGORITHM "BreadthFirstSearchAlgorithm.txt"
 #define KARGER_CONTRACTION_ALGORITHM "KargerContractionAlgorithm_MinCutSearch.txt"
+#define DIJKSTRAS_SHORTEST_PATH_ALGORITHM "DijkstrasShortestPathAlgorithm.txt"
 
 using namespace std;
 
 int main()
 {
-
 #if 1
+	ABUndirectedGraph g;
+	const char *fileName = DIJKSTRAS_SHORTEST_PATH_ALGORITHM;
+	g.loadGraph(fileName);
+	ABUndirectedGraphUnitTests(g);
+	ABDijkstrasShortestPathAlgorithm(g);
+#endif
+	
+#if 0
 	ABDirectedGraph g;
 	const char *fileName = KOSARAJUS_TWO_PASS_ALGORITHM;
 	g.loadGraph(fileName);

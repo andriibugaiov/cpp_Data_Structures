@@ -37,7 +37,7 @@ void ABHeapTree<T>::percolateDown(int anIndex)
 {
     if (anIndex > getSize())
     {
-        return;s
+        return;
     }
     
     ABNodeHeapTree<T> node = _vector[anIndex];
@@ -71,15 +71,6 @@ ABHeapTree<T>::ABHeapTree()
 {
     ABNodeHeapTree<T> emptyNode;
     _vector.pushBack(emptyNode);
-}
-
-template <typename T>
-ABHeapTree<T>::ABHeapTree(const ABVector<T> aItems)
-{
-    ABNodeHeapTree<T> emptyNode;
-    _vector.pushBack(emptyNode);
-    
-    // TODO:
 }
 
 template <typename T>
@@ -119,6 +110,61 @@ T ABHeapTree<T>::removeRoot()
     return node.getData();
 }
 
+template <typename T>
+ABNodeHeapTree<T> ABHeapTree<T>::removeRootNode()
+{
+	if (isEmpty())
+	{
+		throw runtime_error("Tree is empty!");
+	}
+	
+	ABNodeHeapTree<T> node = _vector[1];
+	_vector[1] = _vector[getSize()];
+	_vector[getSize()] = node;
+	
+	node = _vector.popBack();
+	percolateDown(1);
+	return node;
+}
+
+#pragma make -
+
+template <typename T>
+int ABHeapTree<T>::search(const T &aData)
+{
+	int i;
+	for (i = 1; i <= getSize(); ++i)
+	{
+		if (_vector[i].getData() == aData)
+		{
+			break;
+		}
+	}
+	return i;
+}
+
+template <typename T>
+void ABHeapTree<T>::increaseKey(const T &aData, int aDelta)
+{
+	int i = search(aData);
+	if (i <= getSize())
+	{
+		_vector[i].setKey(_vector[i].getKey() + aDelta);
+		percolateDown(i);
+	}
+}
+
+template <typename T>
+void ABHeapTree<T>::decreaseKey(const T &aData, int aDelta)
+{
+	int i = search(aData);
+	if (i <= getSize())
+	{
+		_vector[i].setKey(_vector[i].getKey() - aDelta);
+		percolateUp(i);
+	}
+}
+
 #pragma mark -
 
 template class ABHeapTree<int>;
@@ -130,7 +176,24 @@ template class ABHeapTree<ABVertex>;
 
 #pragma mark -
 
-void ABHeapTreeUnitTests(const ABHeapTree<int> aTree)
+void ABHeapTreeUnitTests(ABHeapTree<int> &aTree)
 {
-
+	int i;
+	for (i = 0; i < 100; ++i)
+	{
+		int key = rand() % 100;
+		int data = i;
+		aTree.insert(data, key);
+	}
+	
+	ABNodeHeapTree<int> dataNode = aTree.removeRootNode();
+	for (i = 0; i < 99; ++i)
+	{
+		ABNodeHeapTree<int> nextDataNode = aTree.removeRootNode();
+		if (dataNode.getKey() > nextDataNode.getKey())
+		{
+			throw runtime_error("Test fail!");
+		}
+		dataNode = nextDataNode;
+	}
 }

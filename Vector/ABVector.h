@@ -50,8 +50,8 @@ public:
 	
 	ABIterator end();
 	ABConstIterator end() const;
+	
+	friend void ABVectorUnitTests(ABVector<int *> &aVector);
 };
-
-void ABVectorUnitTests(ABVector<int *> aVector);
 
 #endif /* defined(__workplace__Vector__) */

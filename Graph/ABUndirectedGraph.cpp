@@ -104,8 +104,15 @@ void ABUndirectedGraph::loadGraph(const char *aFileName)
 		}
 		
 		int adjacentVertexId;
+		int edgeLength = -1;
 		while (sstream >> adjacentVertexId)
 		{
+			if (sstream.peek() == ',')
+			{
+				sstream.ignore();
+				sstream >> edgeLength;
+			}
+			
 			ABVertex *adjacentVertex = nullptr;
 			
 			// { List search
@@ -143,7 +150,7 @@ void ABUndirectedGraph::loadGraph(const char *aFileName)
 			
 			if (!edge)
 			{
-				getEdges().pushBack(ABEdge(vertex, adjacentVertex));
+				getEdges().pushBack(ABEdge(vertex, adjacentVertex, edgeLength));
 				edge = &getEdges().back();
 			}
 			
@@ -166,7 +173,8 @@ void ABUndirectedGraph::display()
 		for (lI = (*vertexListIterator).getEdges().begin(); lI != (*vertexListIterator).getEdges().end(); ++lI)
 		{
 			ABEdge *edge = *lI;
-			cout << " (" << (*(*edge).getHead()).getVertexId() << ", " << (*(*edge).getTail()).getVertexId() << ") ";
+			cout << " (" << (*(*edge).getHead()).getVertexId() << ", "
+			<< (*(*edge).getTail()).getVertexId() << ") - " << (*edge).getLength();
 		}
 		cout << endl;
 	}

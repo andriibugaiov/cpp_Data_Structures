@@ -8,8 +8,13 @@
 
 #include "ABEdge.h"
 
-ABEdge::ABEdge(ABVertex *aHead, ABVertex *aTail) : _head(aHead), _tail(aTail), _counter(0)
+ABEdge::ABEdge(ABVertex *aHead, ABVertex *aTail, int aLength) : _head(aHead), _tail(aTail), _length(aLength), _counter(0)
 {
+}
+
+int ABEdge::getLength()
+{
+	return _length;
 }
 
 ABVertex *ABEdge::getHead()
@@ -22,6 +27,11 @@ ABVertex *ABEdge::getTail()
 	return _tail;
 }
 
+void ABEdge::setLength(int aLength)
+{
+	_length = aLength;
+}
+
 void ABEdge::setHead(ABVertex *aHead)
 {
 	_head = aHead;
@@ -32,7 +42,7 @@ void ABEdge::setTail(ABVertex *aTail)
 	_tail = aTail;
 }
 
-ABVertex *ABEdge::getPairedVertexForVertex(ABVertex *aVertex)
+ABVertex *ABEdge::getAdjacentVertexForVertex(ABVertex *aVertex)
 {
 	if (aVertex == getHead())
 	{
@@ -43,4 +53,11 @@ ABVertex *ABEdge::getPairedVertexForVertex(ABVertex *aVertex)
 		return getHead();
 	}
 	return nullptr;
+}
+
+#pragma mark -
+
+bool ABEdge::operator==(const ABEdge &anOther)
+{
+	return this == &anOther;
 }

@@ -16,7 +16,4 @@ public:
 	virtual void display() = 0;
 };
 
-// TODO: implement adapter class
-void ABGraphUnitTests(ABGraph &aGraph);
-
 #endif /* defined(__workplace__ABGraph__) */

@@ -23,6 +23,7 @@ class ABVertex
 	int _bfs_layer_number; // undirected
 	int _dfs_order_number; // directed
 	ABVertex *_dfs_vertex_leader; // directed
+	int _greedy_score; // undirected
 public:
 	// tests specific data
 	int _counter; // undirected / directed
@@ -34,16 +35,21 @@ public:
 	ABList<ABEdge *> &getReversedEdges();
 	
 	int getBFSLayerNumber();
-	void setBFSLayerNumber(int aBFSLayerNumber);
-	bool isExploredBFSLayerNumber();
-	
 	int getDFSOrderNumber();
-	void setDFSOrderNumber(int aDFSOrderNumber);
-	bool isExploredDFSOrderNumber();
-	
 	ABVertex *getDFSVertexLeader();
+	int getGreedyScore();
+	
+	void setBFSLayerNumber(int aBFSLayerNumber);
+	void setDFSOrderNumber(int aDFSOrderNumber);
 	void setDFSVertexLeader(ABVertex *aDFSVertexLeader);
+	void setGreedyScore(int aScore);
+	
+	bool isExploredBFSLayerNumber();
+	bool isExploredDFSOrderNumber();
 	bool isExploredDFSVertexLeader();
+	bool isExploredDSPGreedyScore();
+	
+	bool operator==(const ABVertex &anOther);
 };
 
 #endif /* defined(__workplace__ABVertex__) */

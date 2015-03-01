@@ -8,6 +8,7 @@
 
 #include "ABGraphAlgorithm.h"
 
+#include "ABHeapTree.h"
 #include "ABVector.h"
 #include "ABList.h"
 
@@ -45,7 +46,7 @@ void ABDFSOrderNumberAlgorithmWithEntryVertex(ABDirectedGraph &aGraph, ABVertex 
 	ABList<ABVertex *> stack;
 	
 	ABVertex *pairedVertex = nullptr;
-	ABVertex *vertex = aVertex;
+	ABVertex *vertex = aVertex == nullptr ? &aGraph.getVertecies()[0] : aVertex;
 	(*vertex).setDFSOrderNumber(0);
 	stack.pushBack(vertex);
 	
@@ -67,9 +68,11 @@ void ABDFSOrderNumberAlgorithmWithEntryVertex(ABDirectedGraph &aGraph, ABVertex 
 		}
 	}
 #else
-	(*aVertex).setDFSOrderNumber(0);
+	ABVertex *vertex = aVertex == nullptr ? &aGraph.getVertecies()[0] : aVertex;
 	
-	for (ABList<ABEdge *>::ABIterator pEdgeListIterator = (*aVertex).getReversedEdges().begin(); pEdgeListIterator != (*aVertex).getReversedEdges().end(); ++pEdgeListIterator)
+	(*vertex).setDFSOrderNumber(0);
+	
+	for (ABList<ABEdge *>::ABIterator pEdgeListIterator = (*vertex).getReversedEdges().begin(); pEdgeListIterator != (*vertex).getReversedEdges().end(); ++pEdgeListIterator)
 	{
 		// traverse graph in reversed order
 		ABVertex *tail = (*(*pEdgeListIterator)).getTail();
@@ -80,8 +83,8 @@ void ABDFSOrderNumberAlgorithmWithEntryVertex(ABDirectedGraph &aGraph, ABVertex 
 	}
 	
 	++dfs_order_number;
-	(*aVertex).setDFSOrderNumber(dfs_order_number);
-	aGraph.getOrderedVertecies().pushFront(aVertex);
+	(*vertex).setDFSOrderNumber(dfs_order_number);
+	aGraph.getOrderedVertecies().pushFront(vertex);
 #endif
 }
 
@@ -292,7 +295,7 @@ void ABBFSAlgorithmWithEntryVertex(ABUndirectedGraph &aGraph, ABVertex *aVertex)
 {
 	ABList<ABVertex *> queue;
 	
-	ABVertex *pairedVertex = nullptr;
+	ABVertex *adjacentVertex = nullptr;
 	ABVertex *vertex = aVertex == nullptr ? &aGraph.getVertecies().front() : aVertex;
 	(*vertex).setBFSLayerNumber(0);
 	queue.pushBack(vertex);
@@ -305,12 +308,104 @@ void ABBFSAlgorithmWithEntryVertex(ABUndirectedGraph &aGraph, ABVertex *aVertex)
 		ABList<ABEdge *>::ABIterator pEdgeListIterator;
 		for (pEdgeListIterator = (*vertex).getEdges().begin(); pEdgeListIterator != (*vertex).getEdges().end(); ++pEdgeListIterator)
 		{
-			pairedVertex = (*(*pEdgeListIterator)).getPairedVertexForVertex(vertex);
-			if (!(*pairedVertex).isExploredBFSLayerNumber())
+			adjacentVertex = (*(*pEdgeListIterator)).getAdjacentVertexForVertex(vertex);
+			if (!(*adjacentVertex).isExploredBFSLayerNumber())
 			{
-				(*pairedVertex).setBFSLayerNumber((*vertex).getBFSLayerNumber() + 1);
-				queue.pushBack(pairedVertex);
+				(*adjacentVertex).setBFSLayerNumber((*vertex).getBFSLayerNumber() + 1);
+				queue.pushBack(adjacentVertex);
 			}
 		}
 	}
+}
+
+#pragma mark - Dijkstras Shortest Path Algorithm
+
+void ABLoadHeapTree(ABUndirectedGraph &aGraph, ABHeapTree<ABVertex *> &aTree, ABVertex *aVertex);
+
+#pragma mark -
+
+void ABLoadHeapTree(ABUndirectedGraph &aGraph, ABHeapTree<ABVertex *> &aTree, ABVertex *aVertex)
+{
+	int infinity = INT_MAX;
+	ABList<ABVertex>::ABIterator vertexListIterator = aGraph.getVertecies().begin();
+	for (; vertexListIterator != aGraph.getVertecies().end(); ++vertexListIterator)
+	{
+		if (aVertex == &(*vertexListIterator))
+		{
+			(*aVertex).setGreedyScore(0);
+			aTree.insert(aVertex, (*aVertex).getGreedyScore());
+		}
+		else
+		{
+			(*vertexListIterator).setGreedyScore(infinity);
+			aTree.insert(&(*vertexListIterator), (*vertexListIterator).getGreedyScore());
+		}
+	}
+}
+
+void ABDijkstrasShortestPathAlgorithm(ABUndirectedGraph &aGraph, ABVertex *aVertex)
+{
+	// inorder to ensure that the graph is connected
+	ABBFSAlgorithmWithEntryVertex(aGraph);
+	ABList<ABVertex>::ABIterator vertexListIterator = aGraph.getVertecies().begin();
+	for (; vertexListIterator != aGraph.getVertecies().end(); ++vertexListIterator)
+	{
+		if (!(*vertexListIterator).isExploredBFSLayerNumber())
+		{
+			throw runtime_error("Error!");
+		}
+	}
+	
+	ABHeapTree<ABVertex *> heap;
+	ABVertex *vertex = aVertex == nullptr ? &aGraph.getVertecies().front() : aVertex;
+
+	// TODO: 'index' - 'vetexId' is not a general mapping
+	int shortestPaths[aGraph.getVertecies().getSize()];
+	for (int i = 0; i < aGraph.getVertecies().getSize(); ++i)
+	{
+		shortestPaths[i] = -1;
+	}
+	
+	ABLoadHeapTree(aGraph, heap, vertex);
+	while (!heap.isEmpty())
+	{
+		vertex = heap.removeRoot();
+		shortestPaths[(*vertex).getVertexId() - 1] = (*vertex).getGreedyScore();
+		
+		ABList<ABEdge *>::ABIterator pEdgeListIterator;
+		for (pEdgeListIterator = (*vertex).getEdges().begin(); pEdgeListIterator != (*vertex).getEdges().end(); ++pEdgeListIterator)
+		{
+			ABEdge *edge = *pEdgeListIterator;
+			ABVertex *adjacentVertex = (*edge).getAdjacentVertexForVertex(vertex);
+			if (!(*adjacentVertex).isExploredDSPGreedyScore())
+			{
+				int oldGreedyScore = (*adjacentVertex).getGreedyScore();
+				int newGreedyScore = (*vertex).getGreedyScore() + (*edge).getLength();
+				if (newGreedyScore < oldGreedyScore)
+				{
+					(*adjacentVertex).setGreedyScore(newGreedyScore);
+					// TODO: runs in O(n) because of the search in heap (decrease efficiency from O(m*log(n)) to O(m*n))
+					// to do better, keep reference on the node in heap that contains 'adjacent vertex'
+					heap.decreaseKey(adjacentVertex, oldGreedyScore - newGreedyScore);
+				}
+			}
+		}
+		(*vertex).setGreedyScore(INT_MIN);
+	}
+	
+	for (int i = 0; i < aGraph.getVertecies().getSize(); ++i)
+	{
+		if (shortestPaths[i] == -1)
+		{
+			throw runtime_error("Graph is connected. Shortest path cannot be -1.");
+		}
+	}
+	
+	int verteciesIds[] = {7, 37, 59, 82, 99, 115, 133, 165, 188, 197};
+	for (int i = 0; i < sizeof(verteciesIds)/sizeof(verteciesIds[0]); ++i)
+	{
+		cout << shortestPaths[verteciesIds[i] - 1] << ",";
+	}
+	cout << endl;
+	// 2599,2610,2947,2052,2367,2399,2029,2442,2505,3068
 }

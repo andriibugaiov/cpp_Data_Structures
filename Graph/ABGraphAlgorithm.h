@@ -21,7 +21,7 @@ class ABDirectedGraph;
  	Used as a preprocessing step in Kosarajus Two Pass Algorithm.
 */
 
-void ABDFSOrderNumberAlgorithmWithEntryVertex(ABDirectedGraph &aGraph, ABVertex *aVertex);
+void ABDFSOrderNumberAlgorithmWithEntryVertex(ABDirectedGraph &aGraph, ABVertex *aVertex = nullptr);
 
 #pragma mark - Kosarajus Two Pass Algorithm
 
@@ -44,5 +44,12 @@ int ABKargerContractionAlgorithm(ABUndirectedGraph &aGraph);
  	Identifies the shortest path from a given vertex in undirected graph having weights of the edges equal to one.
 */
 void ABBFSAlgorithmWithEntryVertex(ABUndirectedGraph &aGraph, ABVertex *aVertex = nullptr);
+
+#pragma mark - Dijkstras Shortest Path Algorithm
+
+/*
+	Identifies all the shortest path from the given vertex.
+ */
+void ABDijkstrasShortestPathAlgorithm(ABUndirectedGraph &aGraph, ABVertex *aVertex = nullptr);
 
 #endif /* defined(__workplace__ABGraphAlgorithm__) */

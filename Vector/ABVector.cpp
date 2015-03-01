@@ -262,7 +262,7 @@ template class ABVector<ABNodeHeapTree<ABVertex>>;
 
 #pragma mark -
 
-void ABVectorUnitTests(ABVector<int *> aVector)
+void ABVectorUnitTests(ABVector<int *> &aVector)
 {
 	int j;
 	for (j = 0; j < 10; ++j)

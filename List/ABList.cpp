@@ -362,7 +362,7 @@ template class ABList<ABVertex>;
 
 #pragma mark -
 
-void ABListUnitTests(ABList<int *> aList)
+void ABListUnitTests(ABList<int *> &aList)
 {
 	int j;
 	for (j = 0; j < 10; ++j)

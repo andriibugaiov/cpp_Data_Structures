@@ -32,8 +32,8 @@ public:
 	
 	void loadGraph(const char *aFileName);
 	void display();
+	
+	friend void ABDirectedGraphUnitTests(ABDirectedGraph &aGraph);
 };
-
-void ABDirectedGraphUnitTests(ABDirectedGraph &aGraph);
 
 #endif /* defined(__workplace__ABDirectedGraph__) */

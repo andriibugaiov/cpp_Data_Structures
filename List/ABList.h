@@ -101,8 +101,8 @@ public:
 	ABIterator insert(ABIterator anInterator, const T &aData);
 	ABIterator remove(ABIterator anInterator);
 	ABIterator remove(ABIterator aStart, ABIterator anEnd);
+	
+	friend void ABListUnitTests(ABList<int *> &aList);
 };
-
-void ABListUnitTests(ABList<int *> aList);
 
 #endif /* defined(__workplace__ABList__) */
