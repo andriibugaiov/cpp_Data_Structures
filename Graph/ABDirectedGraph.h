@@ -22,7 +22,6 @@ class ABDirectedGraph : public ABGraph
 	ABVector<ABEdge> *_edges;
 	ABList<ABVertex *> *_ordered_vertecies;
 public:
-	
 	ABDirectedGraph();
 	~ABDirectedGraph();
 	

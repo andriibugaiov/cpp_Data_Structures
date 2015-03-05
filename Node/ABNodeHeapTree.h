@@ -9,8 +9,7 @@
 #ifndef __workplace__ABNodeHeapTree__
 #define __workplace__ABNodeHeapTree__
 
-template <typename T>
-class ABNode;
+#include "ABNode.h"
 
 template <typename T>
 class ABNodeHeapTree : public ABNode<T>
@@ -25,6 +24,7 @@ public:
     
     bool operator<(const ABNodeHeapTree<T> &anOther);
     bool operator>(const ABNodeHeapTree<T> &anOther);
+	bool operator==(const ABNodeHeapTree<T> &anOther);
 };
 
 #endif /* defined(__workplace__ABNodeHeapTree__) */

@@ -9,6 +9,11 @@
 #ifndef __workplace__ABGraphAlgorithm__
 #define __workplace__ABGraphAlgorithm__
 
+#define KOSARAJUS_TWO_PASS_ALGORITHM "KosarajusTwoPassAlgorithm_StronglyConnectedComponentsSearch.txt"
+#define BREADTH_FIRST_SEARCH_ALGORITHM "BreadthFirstSearchAlgorithm.txt"
+#define KARGER_CONTRACTION_ALGORITHM "KargerContractionAlgorithm_MinCutSearch.txt"
+#define DIJKSTRAS_SHORTEST_PATH_ALGORITHM "DijkstrasShortestPathAlgorithm.txt"
+
 class ABVertex;
 class ABEdge;
 class ABUndirectedGraph;

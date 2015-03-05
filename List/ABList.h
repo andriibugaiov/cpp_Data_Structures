@@ -73,36 +73,32 @@ public:
 		friend class ABList<T>;
 	};
 	
-	const ABList<T> &operator=(const ABList<T> &anOther);
-
-	ABIterator begin();
-	ABConstIterator begin() const;
+	void clear();
 	
-	ABIterator end();
-	ABConstIterator end() const;
+	int getSize() const;
+	bool isEmpty() const;
+	
+	const ABList<T> &operator=(const ABList<T> &anOther);
 	
 	T &front();
 	const T &front() const;
-	
 	T &back();
 	const T &back() const;
 	
-    void clear();
-    
-	int getSize() const;
-	bool isEmpty() const;
-
 	void pushFront(const T &aData);
-	void pushBack(const T &aData);
-
 	void popFront();
+	void pushBack(const T &aData);
 	void popBack();
-
+	
+	ABIterator begin();
+	ABConstIterator begin() const;
+	ABIterator end();
+	ABConstIterator end() const;
 	ABIterator insert(ABIterator anInterator, const T &aData);
 	ABIterator remove(ABIterator anInterator);
 	ABIterator remove(ABIterator aStart, ABIterator anEnd);
 	
-	friend void ABListUnitTests(ABList<int *> &aList);
+	friend void ABListUnitTests(ABList<T> &aList);
 };
 
 #endif /* defined(__workplace__ABList__) */

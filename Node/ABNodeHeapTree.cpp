@@ -7,7 +7,6 @@
 //
 
 #include "ABNodeHeapTree.h"
-#include "ABNode.h"
 
 #include "ABEdge.h"
 #include "ABVertex.h"
@@ -50,12 +49,17 @@ bool ABNodeHeapTree<T>::operator>(const ABNodeHeapTree<T> &anOther)
     return getKey() > anOther.getKey();
 }
 
+template <typename T>
+bool ABNodeHeapTree<T>::operator==(const ABNodeHeapTree<T> &anOther)
+{
+	// TODO:
+	return getKey() == anOther.getKey() && (this -> getData() == anOther.getData());
+}
 
 #pragma mark -
 
+template class ABNodeHeapTree<long long>;
 template class ABNodeHeapTree<int>;
 template class ABNodeHeapTree<int *>;
 template class ABNodeHeapTree<ABEdge *>;
-template class ABNodeHeapTree<ABEdge>;
 template class ABNodeHeapTree<ABVertex *>;
-template class ABNodeHeapTree<ABVertex>;

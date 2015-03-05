@@ -11,7 +11,7 @@
 #include "ABVertex.h"
 #include "ABEdge.h"
 #include "ABNodeHeapTree.h"
-#include "ABNode.h"
+#include "ABList.h"
 
 #include <stdexcept>
 #include <iostream>
@@ -256,31 +256,17 @@ template class ABVector<ABVertex>;
 template class ABVector<ABNodeHeapTree<int>>;
 template class ABVector<ABNodeHeapTree<int *>>;
 template class ABVector<ABNodeHeapTree<ABEdge *>>;
-template class ABVector<ABNodeHeapTree<ABEdge>>;
 template class ABVector<ABNodeHeapTree<ABVertex *>>;
-template class ABVector<ABNodeHeapTree<ABVertex>>;
+
+
+template class ABVector<ABList<long long>>;
+template class ABVector<ABList<int>>;
+template class ABVector<ABList<int *>>;
+template class ABVector<ABList<ABNodeHeapTree<long long>>>;
 
 #pragma mark -
 
-void ABVectorUnitTests(ABVector<int *> &aVector)
+template <typename T>
+void ABVectorUnitTests(ABVector<T> &aVector)
 {
-	int j;
-	for (j = 0; j < 10; ++j)
-	{
-		int *i = new int(j);
-		aVector.pushBack(i);
-	}
-	
-	const ABVector<int *> constV = aVector;
-	ABVector<int *>::ABConstIterator constI;
-	for (constI = constV.begin(); constI != constV.end(); ++constI)
-	{
-		cout << **constI << endl;
-	}
-	
-	ABVector<int *>::ABIterator i;
-	for (i = aVector.begin(); i != aVector.end(); ++i)
-	{
-		delete *i;
-	}
 }

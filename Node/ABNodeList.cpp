@@ -7,10 +7,10 @@
 //
 
 #include "ABNodeList.h"
-#include "ABNode.h"
 
 #include "ABEdge.h"
 #include "ABVertex.h"
+#include "ABNodeHeapTree.h"
 
 template <typename T>
 ABNodeList<T>::ABNodeList(ABNodeList<T> *aNext, ABNodeList<T> *aPrevious) : _next(aNext), _previous(aPrevious)
@@ -49,9 +49,11 @@ ABNodeList<T>* ABNodeList<T>::getPrevious() const
 
 #pragma mark -
 
+template class ABNodeList<long long>;
 template class ABNodeList<int>;
 template class ABNodeList<int *>;
 template class ABNodeList<ABEdge *>;
 template class ABNodeList<ABEdge>;
 template class ABNodeList<ABVertex *>;
 template class ABNodeList<ABVertex>;
+template class ABNodeList<ABNodeHeapTree<long long>>;

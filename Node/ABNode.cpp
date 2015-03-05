@@ -10,6 +10,7 @@
 
 #include "ABEdge.h"
 #include "ABVertex.h"
+#include "ABNodeHeapTree.h"
 
 template <typename T>
 ABNode<T>::ABNode()
@@ -34,12 +35,13 @@ const T &ABNode<T>::getData() const
     return _data;
 }
 
-
 #pragma mark -
 
+template class ABNode<long long>;
 template class ABNode<int>;
 template class ABNode<int *>;
 template class ABNode<ABEdge *>;
 template class ABNode<ABEdge>;
 template class ABNode<ABVertex *>;
 template class ABNode<ABVertex>;
+template class ABNode<ABNodeHeapTree<long long>>;

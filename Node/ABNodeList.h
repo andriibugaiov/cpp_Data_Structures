@@ -9,11 +9,10 @@
 #ifndef __workplace__ListNode__
 #define __workplace__ListNode__
 
-template <typename T>
-class ABList;
+#include "ABNode.h"
 
 template <typename T>
-class ABNode;
+class ABList;
 
 template <typename T>
 class ABNodeList : public ABNode<T>
