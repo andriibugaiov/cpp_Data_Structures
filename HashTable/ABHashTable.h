@@ -26,18 +26,18 @@ class ABHashTable
 	ABVector<ABList<T>> _table;
 	
 	void rehash();
-	int myHash(/*const*/ T &aData);
 public:
 	ABHashTable(int aCapacity = HASH_TABLE_INITIAL_CAPACITY);
 	
 	void display();
 	
 	int getSize() const;
-	int getTableSize() const;
-	bool isEmpty() const;
+    bool isEmpty() const;
 	
 	const ABList<T> &operator[](int aPosition) const;
-	
+    int hashPosition(/*const*/ T &aData);
+    int getTableSize() const;
+    
 	bool search(/*const*/ T &aData);
 	
 	void insert(/*const*/ T &aData);
@@ -48,8 +48,6 @@ public:
 
 long long _hash(long long aValue);
 
-// TODO:
 int ABTwoSumComputingAlgorithm(const char *aFileName);
-long long _hash(ABNodeKeyValue<long long> &aNode);
 
 #endif /* defined(__workplace__ABHashTable__) */

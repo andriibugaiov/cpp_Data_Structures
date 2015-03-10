@@ -24,17 +24,6 @@ void ABHashTable<T>::rehash()
 	// TODO:
 }
 
-template <typename T>
-int ABHashTable<T>::myHash(/*const*/ T &aData)
-{
-	int hashValue = _hash(aData) % getTableSize();
-	if (hashValue < 0)
-	{
-		hashValue += getTableSize();
-	}
-	return hashValue;
-}
-
 #pragma mark -
 
 template <typename T>
@@ -83,12 +72,6 @@ int ABHashTable<T>::getSize() const
 }
 
 template <typename T>
-int ABHashTable<T>::getTableSize() const
-{
-	return _table.getSize();
-}
-
-template <typename T>
 bool ABHashTable<T>::isEmpty() const
 {
 	return getSize() == 0;
@@ -107,10 +90,29 @@ const ABList<T> &ABHashTable<T>::operator[](int aPosition) const
 }
 
 template <typename T>
+int ABHashTable<T>::hashPosition(/*const*/ T &aData)
+{
+    int hashPosition = _hash(aData) % getTableSize();
+    if (hashPosition < 0)
+    {
+        hashPosition += getTableSize();
+    }
+    return hashPosition;
+}
+
+template <typename T>
+int ABHashTable<T>::getTableSize() const
+{
+    return _table.getSize();
+}
+
+#pragma mark -
+
+template <typename T>
 bool ABHashTable<T>::search(/*const*/ T &aData)
 {
-	int hashValue = myHash(aData);
-	ABList<T> &list = _table[hashValue];
+	int position = hashPosition(aData);
+	ABList<T> &list = _table[position];
 	
 	typename ABList<T>::ABIterator iterator = list.begin();
 	for (;iterator != list.end(); ++iterator)
@@ -126,8 +128,8 @@ bool ABHashTable<T>::search(/*const*/ T &aData)
 template <typename T>
 void ABHashTable<T>::insert(/*const*/ T &aData)
 {
-	int hashValue = myHash(aData);
-	ABList<T> &list = _table[hashValue];
+	int position = hashPosition(aData);
+	ABList<T> &list = _table[position];
 	
 	typename ABList<T>::ABIterator iterator = list.begin();
 	for (;iterator != list.end(); ++iterator)
@@ -146,8 +148,8 @@ void ABHashTable<T>::insert(/*const*/ T &aData)
 template <typename T>
 void ABHashTable<T>::remove(/*const*/ T &aData)
 {
-	int hashValue = myHash(aData);
-	ABList<T> &list = _table[hashValue];
+	int position = hashPosition(aData);
+	ABList<T> &list = _table[position];
 	
 	typename ABList<T>::ABIterator iterator = list.begin();
 	for (;iterator != list.end(); ++iterator)
@@ -226,13 +228,10 @@ int ABTwoSumComputingAlgorithm(const char *aFileName)
 			int i = 0;
 			for (; i < sizeof(keys) / sizeof(keys[0]); ++i)
 			{
-				int hashValue = keys[i] % ht.getTableSize();
-				if (hashValue < 0)
-				{
-					hashValue += ht.getTableSize();
-				}
-				
-				const ABList<ABNodeKeyValue<long long>> &otherList = ht[hashValue];
+                ABNodeKeyValue<long long> blank(0, keys[i]);
+				int position = ht.hashPosition(blank);
+                
+                const ABList<ABNodeKeyValue<long long>> &otherList = ht[position];
 				ABList<ABNodeKeyValue<long long>>::ABConstIterator otherListIterator = otherList.begin();
 				for (; otherListIterator != otherList.end(); ++otherListIterator)
 				{
@@ -252,9 +251,4 @@ int ABTwoSumComputingAlgorithm(const char *aFileName)
 		counter += twoSums[j];
 	}
 	return counter;
-}
-
-long long _hash(ABNodeKeyValue<long long> &aNode)
-{
-	return aNode.getKey();
 }

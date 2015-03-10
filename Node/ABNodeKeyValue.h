@@ -27,4 +27,7 @@ public:
 	bool operator==(const ABNodeKeyValue<T> &anOther);
 };
 
+template <typename T>
+long long _hash(ABNodeKeyValue<T> &aNode);
+
 #endif /* defined(__workplace__ABNodeKeyValue__) */

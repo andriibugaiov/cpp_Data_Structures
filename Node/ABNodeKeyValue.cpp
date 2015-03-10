@@ -63,3 +63,18 @@ template class ABNodeKeyValue<int>;
 template class ABNodeKeyValue<int *>;
 template class ABNodeKeyValue<ABEdge *>;
 template class ABNodeKeyValue<ABVertex *>;
+
+#pragma mark - 
+
+template <typename T>
+long long _hash(ABNodeKeyValue<T> &aNode)
+{
+    return aNode.getKey();
+}
+
+template long long _hash<long long>(ABNodeKeyValue<long long> &aNode);
+template long long _hash<int>(ABNodeKeyValue<int> &aNode);
+template long long _hash<int *>(ABNodeKeyValue<int *> &aNode);
+template long long _hash<ABEdge *>(ABNodeKeyValue<ABEdge *> &aNode);
+template long long _hash<ABVertex *>(ABNodeKeyValue<ABVertex *> &aNode);
+
