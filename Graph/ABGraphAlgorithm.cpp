@@ -24,6 +24,8 @@
 
 using namespace std;
 
+#define TESTS_ENABLED
+
 #pragma mark - Kosarajus Two Pass Algorithm
 
 void ABDFSVertexLeaderAlgorithmWithEntryVertex(ABDirectedGraph &aGraph, ABVertex *aVertex);
@@ -326,7 +328,7 @@ void ABLoadHeapTree(ABUndirectedGraph &aGraph, ABHeapTree<ABVertex *> &aTree, AB
 
 void ABLoadHeapTree(ABUndirectedGraph &aGraph, ABHeapTree<ABVertex *> &aTree, ABVertex *aVertex)
 {
-	int infinity = INT_MAX;
+	int plusInfinity = INT_MAX;
 	ABList<ABVertex>::ABIterator vertexListIterator = aGraph.getVertecies().begin();
 	for (; vertexListIterator != aGraph.getVertecies().end(); ++vertexListIterator)
 	{
@@ -337,7 +339,7 @@ void ABLoadHeapTree(ABUndirectedGraph &aGraph, ABHeapTree<ABVertex *> &aTree, AB
 		}
 		else
 		{
-			(*vertexListIterator).setGreedyScore(infinity);
+			(*vertexListIterator).setGreedyScore(plusInfinity);
 			aTree.insert(&(*vertexListIterator), (*vertexListIterator).getGreedyScore());
 		}
 	}
@@ -345,7 +347,8 @@ void ABLoadHeapTree(ABUndirectedGraph &aGraph, ABHeapTree<ABVertex *> &aTree, AB
 
 void ABDijkstrasShortestPathAlgorithm(ABUndirectedGraph &aGraph, ABVertex *aVertex)
 {
-	// inorder to ensure that the graph is connected
+#ifdef TESTS_ENABLED
+	// in order to ensure that the graph is connected
 	ABBFSAlgorithmWithEntryVertex(aGraph);
 	ABList<ABVertex>::ABIterator vertexListIterator = aGraph.getVertecies().begin();
 	for (; vertexListIterator != aGraph.getVertecies().end(); ++vertexListIterator)
@@ -355,22 +358,24 @@ void ABDijkstrasShortestPathAlgorithm(ABUndirectedGraph &aGraph, ABVertex *aVert
 			throw runtime_error("Error!");
 		}
 	}
-	
+#endif
+    
 	ABHeapTree<ABVertex *> heap;
 	ABVertex *vertex = aVertex == nullptr ? &aGraph.getVertecies().front() : aVertex;
 
-	// TODO: 'index' - 'vetexId' is not a general mapping
 	int shortestPaths[aGraph.getVertecies().getSize()];
 	for (int i = 0; i < aGraph.getVertecies().getSize(); ++i)
 	{
 		shortestPaths[i] = -1;
 	}
 	
+    int minusInfinity = INT_MIN;
 	ABLoadHeapTree(aGraph, heap, vertex);
 	while (!heap.isEmpty())
 	{
-		vertex = heap.removeRoot();
-		shortestPaths[(*vertex).getVertexId() - 1] = (*vertex).getGreedyScore();
+        int greedyScore = -1;
+		vertex = heap.removeRoot(&greedyScore);
+		shortestPaths[(*vertex).getVertexId() - 1] = greedyScore;
 		
 		ABList<ABEdge *>::ABIterator pEdgeListIterator;
 		for (pEdgeListIterator = (*vertex).getEdges().begin(); pEdgeListIterator != (*vertex).getEdges().end(); ++pEdgeListIterator)
@@ -380,7 +385,7 @@ void ABDijkstrasShortestPathAlgorithm(ABUndirectedGraph &aGraph, ABVertex *aVert
 			if (!(*adjacentVertex).isExploredDSPGreedyScore())
 			{
 				int oldGreedyScore = (*adjacentVertex).getGreedyScore();
-				int newGreedyScore = (*vertex).getGreedyScore() + (*edge).getLength();
+				int newGreedyScore = greedyScore + (*edge).getLength();
 				if (newGreedyScore < oldGreedyScore)
 				{
 					(*adjacentVertex).setGreedyScore(newGreedyScore);
@@ -390,9 +395,10 @@ void ABDijkstrasShortestPathAlgorithm(ABUndirectedGraph &aGraph, ABVertex *aVert
 				}
 			}
 		}
-		(*vertex).setGreedyScore(INT_MIN);
+		(*vertex).setGreedyScore(minusInfinity);
 	}
-	
+
+#ifdef TESTS_ENABLED
 	for (int i = 0; i < aGraph.getVertecies().getSize(); ++i)
 	{
 		if (shortestPaths[i] == -1)
@@ -400,10 +406,12 @@ void ABDijkstrasShortestPathAlgorithm(ABUndirectedGraph &aGraph, ABVertex *aVert
 			throw runtime_error("Graph is connected. Shortest path cannot be -1.");
 		}
 	}
-	
+#endif
+    
 	int verteciesIds[] = {7, 37, 59, 82, 99, 115, 133, 165, 188, 197};
 	for (int i = 0; i < sizeof(verteciesIds)/sizeof(verteciesIds[0]); ++i)
 	{
+        // 'index' = 'vetexId' - 1
 		cout << shortestPaths[verteciesIds[i] - 1] << ",";
 	}
 	cout << endl;

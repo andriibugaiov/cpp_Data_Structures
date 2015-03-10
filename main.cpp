@@ -8,6 +8,9 @@
 
 #include <iostream>
 
+#include "ABGraphAlgorithm.h"
+#include "ABUndirectedGraph.h"
+
 #include "ABMedianMaintainer.h"
 #include "ABHashTable.h"
 
@@ -15,6 +18,13 @@ using namespace std;
 
 int main()
 {
+#if 0
+    ABUndirectedGraph g;
+    const char *fileName = DIJKSTRAS_SHORTEST_PATH_ALGORITHM;
+    g.loadGraph(fileName);
+    ABDijkstrasShortestPathAlgorithm(g);
+#endif
+    
 	ABMedianMaintainer mm;
 	const char *fileName = MEDIAN_MAINTENANCE_PROBLEM;
 	long long mediansSum = ABMediansSumComputingAlgorithm(mm, fileName);

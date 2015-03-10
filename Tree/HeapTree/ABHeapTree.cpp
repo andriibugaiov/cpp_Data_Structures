@@ -111,7 +111,7 @@ void ABHeapTree<T>::insert(const T &aData, int aKey)
 }
 
 template <typename T>
-T ABHeapTree<T>::removeRoot()
+T ABHeapTree<T>::removeRoot(int *oaKey)
 {
     if (isEmpty())
     {
@@ -124,34 +124,26 @@ T ABHeapTree<T>::removeRoot()
     
     node = _vector.popBack();
     percolateDown(1);
+    
+    if (oaKey != nullptr)
+    {
+        *oaKey = node.getKey();
+    }
     return node.getData();
 }
 
 template <typename T>
-ABNodeHeapTree<T> ABHeapTree<T>::removeRootNode()
+const T &ABHeapTree<T>::lookUpRoot(int *oaKey) const
 {
 	if (isEmpty())
 	{
 		throw runtime_error("Tree is empty!");
 	}
-	
-	ABNodeHeapTree<T> node = _vector[1];
-	_vector[1] = _vector[getSize()];
-	_vector[getSize()] = node;
-	
-	node = _vector.popBack();
-	percolateDown(1);
-	return node;
-}
-
-template <typename T>
-const T &ABHeapTree<T>::lookUpRoot() const
-{
-	if (isEmpty())
-	{
-		throw runtime_error("Tree is empty!");
-	}
-	
+    
+    if (oaKey != nullptr)
+    {
+        *oaKey = _vector[1].getKey();
+    }
 	return _vector[1].getData();
 }
 

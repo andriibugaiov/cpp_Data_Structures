@@ -15,7 +15,6 @@ class ABVector;
 template <typename T>
 class ABNodeHeapTree;
 
-// TODO:
 template <typename T>
 class ABHeapTree
 {
@@ -23,9 +22,7 @@ class ABHeapTree
     
     void percolateUp(int anIndex);
     void percolateDown(int anIndex);
-	
-	ABNodeHeapTree<T> removeRootNode();
-	
+		
 	int search(const T &aData);
 public:
     ABHeapTree();
@@ -36,10 +33,10 @@ public:
     int getSize() const;
     bool isEmpty() const;
 	
-	const T &lookUpRoot() const;
-	
     void insert(const T &aData, int aKey);
-    T removeRoot();
+    
+    T removeRoot(int *oaKey = nullptr);
+    const T &lookUpRoot(int *oaKey = nullptr) const;
 	
 	void increaseKey(const T &aData, int aDelta);
 	void decreaseKey(const T &aData, int aDelta);
