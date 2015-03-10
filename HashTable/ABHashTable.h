@@ -12,7 +12,7 @@
 #include "ABVector.h"
 #include "ABList.h"
 
-#include "ABNodeHeapTree.h"
+#include "ABNodeKeyValue.h"
 
 #define TWO_SUM_PROBLEM "TwoSumProblem.txt"
 
@@ -50,6 +50,6 @@ long long _hash(long long aValue);
 
 // TODO:
 int ABTwoSumComputingAlgorithm(const char *aFileName);
-long long _hash(ABNodeHeapTree<long long> &aNode);
+long long _hash(ABNodeKeyValue<long long> &aNode);
 
 #endif /* defined(__workplace__ABHashTable__) */

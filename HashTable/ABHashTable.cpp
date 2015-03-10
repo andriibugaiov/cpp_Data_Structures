@@ -8,7 +8,7 @@
 
 #include "ABHashTable.h"
 
-#include "ABNodeHeapTree.h"
+#include "ABNodeKeyValue.h"
 
 #include <fstream>
 #include <sstream>
@@ -166,7 +166,7 @@ void ABHashTable<T>::remove(/*const*/ T &aData)
 #pragma mark -
 
 template class ABHashTable<long long>;
-template class ABHashTable<ABNodeHeapTree<long long>>;
+template class ABHashTable<ABNodeKeyValue<long long>>;
 
 #pragma mark - 
 
@@ -200,12 +200,12 @@ int ABTwoSumComputingAlgorithm(const char *aFileName)
 	int twoSums[T_MAX - T_MIN + 1] = {0};
 	long long m = T_MAX - T_MIN + 1;
 	
-	ABHashTable<ABNodeHeapTree<long long>> ht(546527);
+	ABHashTable<ABNodeKeyValue<long long>> ht(546527);
 	long long value;
 	while (filestream >> value)
 	{
 		int key = int(value / m);
-		ABNodeHeapTree<long long> node(value, key);
+		ABNodeKeyValue<long long> node(value, key);
 		ht.insert(node);
 	}
 	filestream.close();	
@@ -214,8 +214,8 @@ int ABTwoSumComputingAlgorithm(const char *aFileName)
 	int j = 0;
 	for (; j < ht.getTableSize(); ++j)
 	{
-		const ABList<ABNodeHeapTree<long long>> &list = ht[j];
-		ABList<ABNodeHeapTree<long long>>::ABConstIterator listIterator = list.begin();
+		const ABList<ABNodeKeyValue<long long>> &list = ht[j];
+		ABList<ABNodeKeyValue<long long>>::ABConstIterator listIterator = list.begin();
 		for (; listIterator != list.end(); ++listIterator)
 		{
 			long long T = T_MIN - (*listIterator).getData();
@@ -232,8 +232,8 @@ int ABTwoSumComputingAlgorithm(const char *aFileName)
 					hashValue += ht.getTableSize();
 				}
 				
-				const ABList<ABNodeHeapTree<long long>> &otherList = ht[hashValue];
-				ABList<ABNodeHeapTree<long long>>::ABConstIterator otherListIterator = otherList.begin();
+				const ABList<ABNodeKeyValue<long long>> &otherList = ht[hashValue];
+				ABList<ABNodeKeyValue<long long>>::ABConstIterator otherListIterator = otherList.begin();
 				for (; otherListIterator != otherList.end(); ++otherListIterator)
 				{
 					long long twoSum = (*listIterator).getData() + (*otherListIterator).getData();
@@ -254,7 +254,7 @@ int ABTwoSumComputingAlgorithm(const char *aFileName)
 	return counter;
 }
 
-long long _hash(ABNodeHeapTree<long long> &aNode)
+long long _hash(ABNodeKeyValue<long long> &aNode)
 {
 	return aNode.getKey();
 }

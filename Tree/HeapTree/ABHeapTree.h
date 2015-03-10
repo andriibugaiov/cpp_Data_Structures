@@ -13,12 +13,12 @@ template <typename T>
 class ABVector;
 
 template <typename T>
-class ABNodeHeapTree;
+class ABNodeKeyValue;
 
 template <typename T>
 class ABHeapTree
 {
-    ABVector<ABNodeHeapTree<T>> _vector;
+    ABVector<ABNodeKeyValue<T>> _vector;
     
     void percolateUp(int anIndex);
     void percolateDown(int anIndex);

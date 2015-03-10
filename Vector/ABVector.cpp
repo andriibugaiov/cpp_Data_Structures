@@ -10,7 +10,7 @@
 
 #include "ABVertex.h"
 #include "ABEdge.h"
-#include "ABNodeHeapTree.h"
+#include "ABNodeKeyValue.h"
 #include "ABList.h"
 
 #include <stdexcept>
@@ -253,16 +253,16 @@ template class ABVector<ABEdge>;
 template class ABVector<ABVertex *>;
 template class ABVector<ABVertex>;
 
-template class ABVector<ABNodeHeapTree<int>>;
-template class ABVector<ABNodeHeapTree<int *>>;
-template class ABVector<ABNodeHeapTree<ABEdge *>>;
-template class ABVector<ABNodeHeapTree<ABVertex *>>;
+template class ABVector<ABNodeKeyValue<int>>;
+template class ABVector<ABNodeKeyValue<int *>>;
+template class ABVector<ABNodeKeyValue<ABEdge *>>;
+template class ABVector<ABNodeKeyValue<ABVertex *>>;
 
 
 template class ABVector<ABList<long long>>;
 template class ABVector<ABList<int>>;
 template class ABVector<ABList<int *>>;
-template class ABVector<ABList<ABNodeHeapTree<long long>>>;
+template class ABVector<ABList<ABNodeKeyValue<long long>>>;
 
 #pragma mark -
 

@@ -9,7 +9,7 @@
 #include "ABHeapTree.h"
 
 #include "ABVector.h"
-#include "ABNodeHeapTree.h"
+#include "ABNodeKeyValue.h"
 
 #include "ABVertex.h"
 #include "ABEdge.h"
@@ -22,7 +22,7 @@ using namespace std;
 template <typename T>
 void ABHeapTree<T>::percolateUp(int anIndex)
 {
-    ABNodeHeapTree<T> node = _vector[anIndex];
+    ABNodeKeyValue<T> node = _vector[anIndex];
     int indexHole = anIndex;
     while ((indexHole / 2) != 0 && node < _vector[indexHole / 2])
     {
@@ -40,7 +40,7 @@ void ABHeapTree<T>::percolateDown(int anIndex)
         return;
     }
     
-    ABNodeHeapTree<T> node = _vector[anIndex];
+    ABNodeKeyValue<T> node = _vector[anIndex];
     int indexHole = anIndex;
     int indexChild = 2 * indexHole;
     while (indexChild <= getSize())
@@ -69,14 +69,14 @@ void ABHeapTree<T>::percolateDown(int anIndex)
 template <typename T>
 ABHeapTree<T>::ABHeapTree()
 {
-    ABNodeHeapTree<T> emptyNode;
+    ABNodeKeyValue<T> emptyNode;
     _vector.pushBack(emptyNode);
 }
 
 template <typename T>
 ABHeapTree<T>::ABHeapTree(ABVector<T> aData)
 {
-	ABNodeHeapTree<T> emptyNode;
+	ABNodeKeyValue<T> emptyNode;
 	_vector.pushBack(emptyNode);
 	
 	// TODO:
@@ -86,7 +86,7 @@ template <typename T>
 void ABHeapTree<T>::clear()
 {
 	_vector.clear();
-	ABNodeHeapTree<T> emptyNode;
+	ABNodeKeyValue<T> emptyNode;
 	_vector.pushBack(emptyNode);
 }
 
@@ -105,7 +105,7 @@ bool ABHeapTree<T>::isEmpty() const
 template <typename T>
 void ABHeapTree<T>::insert(const T &aData, int aKey)
 {
-    ABNodeHeapTree<T> node(aData, aKey);
+    ABNodeKeyValue<T> node(aData, aKey);
     _vector.pushBack(node);
     percolateUp(getSize());
 }
@@ -118,7 +118,7 @@ T ABHeapTree<T>::removeRoot(int *oaKey)
         throw runtime_error("Tree is empty!");
     }
     
-    ABNodeHeapTree<T> node = _vector[1];
+    ABNodeKeyValue<T> node = _vector[1];
     _vector[1] = _vector[getSize()];
     _vector[getSize()] = node;
     
