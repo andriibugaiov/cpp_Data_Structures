@@ -11,7 +11,10 @@
 #include "ABGraphAlgorithm.h"
 #include "ABUndirectedGraph.h"
 
-#include "ABMedianMaintainer.h"
+#include "ABHeapTreeAlgorithm.h"
+#include "ABHeapTree.h"
+
+#include "ABHashTableAlgorithm.h"
 #include "ABHashTable.h"
 
 using namespace std;

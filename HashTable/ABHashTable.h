@@ -12,8 +12,6 @@
 #include "ABVector.h"
 #include "ABList.h"
 
-#include "ABNodeKeyValue.h"
-
 #define TWO_SUM_PROBLEM "TwoSumProblem.txt"
 
 #define HASH_TABLE_INITIAL_CAPACITY 8
@@ -47,7 +45,5 @@ public:
 };
 
 long long _hash(long long aValue);
-
-int ABTwoSumComputingAlgorithm(const char *aFileName);
 
 #endif /* defined(__workplace__ABHashTable__) */
