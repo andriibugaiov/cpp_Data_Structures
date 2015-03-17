@@ -11,6 +11,7 @@
 #include "ABVertex.h"
 #include "ABEdge.h"
 #include "ABNodeKeyValue.h"
+#include "ABNodeTwoSum.h"
 #include "ABList.h"
 
 #include <stdexcept>
@@ -263,6 +264,7 @@ template class ABVector<ABList<long long>>;
 template class ABVector<ABList<int>>;
 template class ABVector<ABList<int *>>;
 template class ABVector<ABList<ABNodeKeyValue<long long>>>;
+template class ABVector<ABList<ABNodeTwoSum>>;
 
 #pragma mark -
 

@@ -11,6 +11,7 @@
 #include "ABEdge.h"
 #include "ABVertex.h"
 #include "ABNodeKeyValue.h"
+#include "ABNodeTwoSum.h"
 
 template <typename T>
 ABNode<T>::ABNode()
@@ -45,3 +46,4 @@ template class ABNode<ABEdge>;
 template class ABNode<ABVertex *>;
 template class ABNode<ABVertex>;
 template class ABNode<ABNodeKeyValue<long long>>;
+template class ABNode<ABNodeTwoSum>;

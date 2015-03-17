@@ -9,8 +9,7 @@
 #include "ABHashTableAlgorithm.h"
 
 #include "ABHashTable.h"
-
-#include "ABNodeKeyValue.h"
+#include "ABNodeTwoSum.h"
 
 #include <fstream>
 #include <sstream>
@@ -19,12 +18,9 @@
 
 using namespace std;
 
-#pragma mark -
-
 #define T_MIN (-10000)
 #define T_MAX (10000)
 
-// TODO:
 int ABTwoSumComputingAlgorithm(const char *aFileName)
 {
     ifstream filestream(aFileName);
@@ -36,12 +32,12 @@ int ABTwoSumComputingAlgorithm(const char *aFileName)
     int twoSums[T_MAX - T_MIN + 1] = {0};
     long long m = T_MAX - T_MIN + 1;
     
-    ABHashTable<ABNodeKeyValue<long long>> ht(546527);
+    ABHashTable<ABNodeTwoSum> ht(546527);
     long long value;
     while (filestream >> value)
     {
         int key = int(value / m);
-        ABNodeKeyValue<long long> node(value, key);
+        ABNodeTwoSum node(value, key);
         ht.insert(node);
     }
     filestream.close();
@@ -50,8 +46,8 @@ int ABTwoSumComputingAlgorithm(const char *aFileName)
     int j = 0;
     for (; j < ht.getTableSize(); ++j)
     {
-        const ABList<ABNodeKeyValue<long long>> &list = ht[j];
-        ABList<ABNodeKeyValue<long long>>::ABConstIterator listIterator = list.begin();
+        const ABList<ABNodeTwoSum> &list = ht[j];
+        ABList<ABNodeTwoSum>::ABConstIterator listIterator = list.begin();
         for (; listIterator != list.end(); ++listIterator)
         {
             long long T = T_MIN - (*listIterator).getData();
@@ -62,11 +58,11 @@ int ABTwoSumComputingAlgorithm(const char *aFileName)
             int i = 0;
             for (; i < sizeof(keys) / sizeof(keys[0]); ++i)
             {
-                ABNodeKeyValue<long long> blank(0, keys[i]);
+                ABNodeTwoSum blank(0, keys[i]);
                 int position = ht.hashPosition(blank);
                 
-                const ABList<ABNodeKeyValue<long long>> &otherList = ht[position];
-                ABList<ABNodeKeyValue<long long>>::ABConstIterator otherListIterator = otherList.begin();
+                const ABList<ABNodeTwoSum> &otherList = ht[position];
+                ABList<ABNodeTwoSum>::ABConstIterator otherListIterator = otherList.begin();
                 for (; otherListIterator != otherList.end(); ++otherListIterator)
                 {
                     long long twoSum = (*listIterator).getData() + (*otherListIterator).getData();

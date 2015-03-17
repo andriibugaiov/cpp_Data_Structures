@@ -52,9 +52,15 @@ bool ABNodeKeyValue<T>::operator>(const ABNodeKeyValue<T> &anOther)
 template <typename T>
 bool ABNodeKeyValue<T>::operator==(const ABNodeKeyValue<T> &anOther)
 {
-	// TODO:
-	return getKey() == anOther.getKey() && (this -> getData() == anOther.getData());
+	return getKey() == anOther.getKey();
 }
+
+template <typename T>
+bool ABNodeKeyValue<T>::operator!=(const ABNodeKeyValue<T> &anOther)
+{
+	return !(*this == anOther);
+}
+
 
 #pragma mark -
 

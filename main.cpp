@@ -27,14 +27,13 @@ int main()
     const char *fileName = DIJKSTRAS_SHORTEST_PATH_ALGORITHM;
     g.loadGraph(fileName);
     ABDijkstrasShortestPathAlgorithm(g);
-#endif
-    
-	ABMedianMaintainer mm;
-	const char *fileName = MEDIAN_MAINTENANCE_PROBLEM;
-	long long mediansSum = ABMediansSumComputingAlgorithm(mm, fileName);
-	cout << "The sum of the medians modulo 10000 is - " << mediansSum % 10000 << endl;
 	
-	fileName = TWO_SUM_PROBLEM;
+	const char *fileName = MEDIAN_MAINTENANCE_PROBLEM;
+	long long mediansSum = ABMediansSumComputingAlgorithm(fileName);
+	cout << "The sum of the medians modulo 10000 is - " << mediansSum % 10000 << endl;
+#endif
+	
+	const char *fileName = TWO_SUM_PROBLEM;
 	int counter = ABTwoSumComputingAlgorithm(fileName);
 	cout << "The two-sum count is - " << counter << endl;
 	

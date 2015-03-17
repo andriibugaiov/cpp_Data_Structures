@@ -9,6 +9,7 @@
 #include "ABHashTable.h"
 
 #include "ABNodeKeyValue.h"
+#include "ABNodeTwoSum.h"
 
 #include <iostream>
 
@@ -166,6 +167,7 @@ void ABHashTable<T>::remove(/*const*/ T &aData)
 
 template class ABHashTable<long long>;
 template class ABHashTable<ABNodeKeyValue<long long>>;
+template class ABHashTable<ABNodeTwoSum>;
 
 #pragma mark - 
 

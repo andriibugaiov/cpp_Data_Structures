@@ -15,6 +15,15 @@
 
 using namespace std;
 
+class ABMedianMaintainer
+{
+	ABHeapTree<int> _max_heap;
+	ABHeapTree<int> _min_heap;
+public:
+	void add(int aValue);
+	int getMedian();
+};
+
 void ABMedianMaintainer::add(int aValue)
 {
     if (_min_heap.isEmpty())
@@ -64,20 +73,22 @@ int ABMedianMaintainer::getMedian()
 
 #pragma mark -
 
-long long ABMediansSumComputingAlgorithm(ABMedianMaintainer &aMedianMaintainer, const char *aFileName)
+long long ABMediansSumComputingAlgorithm(const char *aFileName)
 {
     ifstream filestream(aFileName);
     if(!filestream)
     {
         throw runtime_error("Failed to open file.");
     }
+	
+	ABMedianMaintainer medianMaintainer;
     
     long long sum = 0;
     int value;
     while (filestream >> value)
     {
-        aMedianMaintainer.add(value);
-        sum += aMedianMaintainer.getMedian();
+        medianMaintainer.add(value);
+        sum += medianMaintainer.getMedian();
     }
     filestream.close();
     

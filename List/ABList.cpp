@@ -12,6 +12,7 @@
 #include "ABEdge.h"
 #include "ABVertex.h"
 #include "ABNodeKeyValue.h"
+#include "ABNodeTwoSum.h"
 
 #include <stdexcept>
 #include <iostream>
@@ -361,6 +362,7 @@ template class ABList<ABEdge>;
 template class ABList<ABVertex *>;
 template class ABList<ABVertex>;
 template class ABList<ABNodeKeyValue<long long>>;
+template class ABList<ABNodeTwoSum>;
 
 #pragma mark -
 

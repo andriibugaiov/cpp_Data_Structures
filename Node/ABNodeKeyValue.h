@@ -25,6 +25,7 @@ public:
     bool operator<(const ABNodeKeyValue<T> &anOther);
     bool operator>(const ABNodeKeyValue<T> &anOther);
 	bool operator==(const ABNodeKeyValue<T> &anOther);
+	bool operator!=(const ABNodeKeyValue<T> &anOther);
 };
 
 template <typename T>

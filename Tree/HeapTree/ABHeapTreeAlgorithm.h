@@ -15,15 +15,6 @@
 
 #define MEDIAN_MAINTENANCE_PROBLEM "MedianMaintenanceProblem.txt"
 
-class ABMedianMaintainer
-{
-    ABHeapTree<int> _max_heap;
-    ABHeapTree<int> _min_heap;
-public:
-    void add(int aValue);
-    int getMedian();
-};
-
-long long ABMediansSumComputingAlgorithm(ABMedianMaintainer &aMedianMaintainer, const char *aFileName);
+long long ABMediansSumComputingAlgorithm(const char *aFileName);
 
 #endif /* defined(__workplace__ABHeapTreeAlgorithm__) */
