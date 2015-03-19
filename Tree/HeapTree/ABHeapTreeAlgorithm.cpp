@@ -139,7 +139,7 @@ void ABHeapify(void *aVector)
 //	ABHeapStructureTest(h);
 }
 
-#define N 500000000
+#define N 50000000
 
 void ABLinearHeapifyAlgorithm(const char *aFileName)
 {
@@ -164,10 +164,11 @@ void ABLinearHeapifyAlgorithm(const char *aFileName)
 	int i = 0;
 	for (; i < N; ++i)
 	{
-		int value = rand() % 1000;
+		int value = N - i;
 		v.pushBack(value);
 	}
 #endif
 	ABTimer(ABLinearHeapify, &v);
 	ABTimer(ABHeapify, &v);
+
 }

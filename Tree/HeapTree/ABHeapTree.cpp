@@ -96,7 +96,8 @@ ABHeapTree<T>::ABHeapTree(ABVector<T> &aData, ABVector<int> &aKeys)
 		_vector.pushBack(node);
 	}
 	
-	i = size;
+	// the first node that has a child, or parent of the last node
+	i = getSize() / 2;
 	for (; i > 0; --i)
 	{
 		percolateDown(i);
