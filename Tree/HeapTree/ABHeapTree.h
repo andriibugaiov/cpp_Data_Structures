@@ -9,6 +9,8 @@
 #ifndef __workplace__ABHeapTree__
 #define __workplace__ABHeapTree__
 
+#define HEAP_TREE_INITIAL_CAPACITY 8
+
 template <typename T>
 class ABVector;
 
@@ -25,8 +27,8 @@ class ABHeapTree
 		
 	int search(const T &aData);
 public:
-    ABHeapTree();
-	ABHeapTree(ABVector<T> aData);
+    ABHeapTree(int aCapacity = HEAP_TREE_INITIAL_CAPACITY);
+	ABHeapTree(ABVector<T> &aData, ABVector<int> &aKeys);
 	
 	void clear();
 	

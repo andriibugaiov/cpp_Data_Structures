@@ -31,11 +31,14 @@ int main()
 	const char *fileName = MEDIAN_MAINTENANCE_PROBLEM;
 	long long mediansSum = ABMediansSumComputingAlgorithm(fileName);
 	cout << "The sum of the medians modulo 10000 is - " << mediansSum % 10000 << endl;
-#endif
 	
 	const char *fileName = TWO_SUM_PROBLEM;
 	int counter = ABTwoSumComputingAlgorithm(fileName);
 	cout << "The two-sum count is - " << counter << endl;
+#endif
+	
+	const char *fileName = MEDIAN_MAINTENANCE_PROBLEM;
+	ABLinearHeapifyAlgorithm(fileName);
 	
 	return 0;
 }

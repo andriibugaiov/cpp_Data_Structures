@@ -17,4 +17,6 @@
 
 long long ABMediansSumComputingAlgorithm(const char *aFileName);
 
+void ABLinearHeapifyAlgorithm(const char *aFileName);
+
 #endif /* defined(__workplace__ABHeapTreeAlgorithm__) */

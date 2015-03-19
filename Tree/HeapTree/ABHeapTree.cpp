@@ -67,19 +67,40 @@ void ABHeapTree<T>::percolateDown(int anIndex)
 #pragma mark -
 
 template <typename T>
-ABHeapTree<T>::ABHeapTree()
+ABHeapTree<T>::ABHeapTree(int aCapacity)
 {
+	_vector.reserve(aCapacity + 1);
+	
     ABNodeKeyValue<T> emptyNode;
     _vector.pushBack(emptyNode);
 }
 
 template <typename T>
-ABHeapTree<T>::ABHeapTree(ABVector<T> aData)
+ABHeapTree<T>::ABHeapTree(ABVector<T> &aData, ABVector<int> &aKeys)
 {
+	if (aData.getSize() != aKeys.getSize())
+	{
+		throw runtime_error("Error! The size of data vector is not equal to the size of keys vector.");
+	}
+	int size = aKeys.getSize();
+	
+	_vector.reserve(size + 1);
+	
 	ABNodeKeyValue<T> emptyNode;
 	_vector.pushBack(emptyNode);
 	
-	// TODO:
+	int i = 0;
+	for (; i < size; ++i)
+	{
+		ABNodeKeyValue<T> node(aData[i], aKeys[i]);
+		_vector.pushBack(node);
+	}
+	
+	i = size;
+	for (; i > 0; --i)
+	{
+		percolateDown(i);
+	}
 }
 
 template <typename T>

@@ -8,6 +8,9 @@
 
 #include "ABHeapTreeAlgorithm.h"
 
+#include "ABTimer.h"
+#include <stdlib.h>
+
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
@@ -93,4 +96,78 @@ long long ABMediansSumComputingAlgorithm(const char *aFileName)
     filestream.close();
     
     return sum;
+}
+
+#pragma mark -
+
+void ABHeapStructureTest(ABHeapTree<int> &aHeap);
+void ABHeapStructureTest(ABHeapTree<int> &aHeap)
+{
+	int value = aHeap.removeRoot();
+	while (!aHeap.isEmpty())
+	{
+		int newValue = aHeap.removeRoot();
+		if (newValue < value)
+		{
+			throw runtime_error("Heap is broken.");
+		}
+		value = newValue;
+	}
+}
+
+void ABLinearHeapify(void *aVector);
+void ABLinearHeapify(void *aVector)
+{
+	ABVector<int> *pV = (ABVector<int> *)aVector;
+	ABHeapTree<int> h(*pV, *pV);
+	
+//	ABHeapStructureTest(h);
+}
+
+void ABHeapify(void *aVector);
+void ABHeapify(void *aVector)
+{
+	ABVector<int> *pV = (ABVector<int> *)aVector;
+	ABHeapTree<int> h((*pV).getSize());
+	
+	ABVector<int>::ABIterator iV = (*pV).begin();
+	for (; iV != (*pV).end(); ++iV)
+	{
+		h.insert(*iV, *iV);
+	}
+	
+//	ABHeapStructureTest(h);
+}
+
+#define N 500000000
+
+void ABLinearHeapifyAlgorithm(const char *aFileName)
+{
+#if 0
+	ifstream filestream(aFileName);
+	if(!filestream)
+	{
+		throw runtime_error("Failed to open file.");
+	}
+	
+	ABVector<int> v;
+	int value;
+	while (filestream >> value)
+	{
+		v.pushBack(value);
+	}
+	filestream.close();
+#else
+	srand((unsigned)time(NULL));
+	
+	ABVector<int> v(N);
+	int i = 0;
+	for (; i < N; ++i)
+	{
+		int value = rand() % 1000;
+		v.pushBack(value);
+	}
+#endif
+	ABTimer(ABLinearHeapify, &v);
+	ABTimer(ABHeapify, &v);
 }
