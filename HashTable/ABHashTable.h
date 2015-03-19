@@ -23,6 +23,7 @@ class ABHashTable
 	int _size;
 	ABVector<ABList<T>> _table;
 	
+	int nextPrime(int aCapacity);
 	void rehash();
 public:
 	ABHashTable(int aCapacity = HASH_TABLE_INITIAL_CAPACITY);

@@ -16,10 +16,49 @@
 using namespace std;
 
 template <typename T>
+int ABHashTable<T>::nextPrime(int aCapacity)
+{
+	return aCapacity;
+}
+
+template <typename T>
 void ABHashTable<T>::rehash()
 {
-//	double loadFactor = double(getSize()) / double(getTableSize());
-	// TODO:
+	double loadFactor = double(getSize()) / double(getTableSize());
+	if (loadFactor > 0.5)
+	{
+		ABVector<ABList<T>> oldTable = _table;
+		
+		int oldTableSize = getTableSize();
+		int i;
+		for (i = 0; i < oldTableSize; ++i)
+		{
+			_table[i].clear();
+		}
+		
+		_table.reserve(nextPrime(2 * oldTableSize));
+		for (i = oldTableSize; i < _table.getCapacity(); ++i)
+		{
+			ABList<T> list;
+			_table.pushBack(list);
+		}
+		if (getTableSize() != _table.getCapacity())
+		{
+			throw runtime_error("Size of the table is not equal to its capacity.");
+		}
+		
+		for (i = 0; i < oldTableSize; ++i)
+		{
+			ABList<T> &list = oldTable[i];
+			typename ABList<T>::ABIterator iterator = list.begin();
+			for (; iterator != list.end(); ++iterator)
+			{
+				int position = hashPosition(*iterator);
+				ABList<T> &list = _table[position];
+				list.pushFront(*iterator);
+			}
+		}
+	}
 }
 
 #pragma mark -
@@ -27,7 +66,7 @@ void ABHashTable<T>::rehash()
 template <typename T>
 ABHashTable<T>::ABHashTable(int aCapacity) : _size(0)
 {
-	_table.reserve(aCapacity);
+	_table.reserve(nextPrime(aCapacity));
 	int i;
 	for (i = 0; i < _table.getCapacity(); ++i)
 	{
