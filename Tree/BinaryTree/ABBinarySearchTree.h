@@ -125,7 +125,6 @@ public:
     // TODO:
     ABBinarySearchTree(const ABBinarySearchTree &bstree)
     {
-        
     }
     
     // TODO:
@@ -134,9 +133,7 @@ public:
         return *this;
     }
 
-    
-    // TODO:
-    ~ABBinarySearchTree()
+    virtual ~ABBinarySearchTree()
     {
     }
     
