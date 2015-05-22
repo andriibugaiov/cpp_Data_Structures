@@ -93,7 +93,7 @@ class ABBinarySearchTree : public ABBinaryTree<Key>
         }
     }
     
-    // node here is not degenerated
+    // node here is not nullptr
     ABBinaryNode<Key> *removeMin(ABBinaryNode<Key> *&node)
     {
         if (node -> _left)
@@ -101,8 +101,8 @@ class ABBinarySearchTree : public ABBinaryTree<Key>
         return remove(node);
     }
     
-    // node here is not NULL
-    // one child at least is NULL
+    // node here is not nullptr
+    // one child at least is nullptr
     ABBinaryNode<Key> *remove(ABBinaryNode<Key> *&node)
     {
         ABBinaryNode<Key> *temp = node;
