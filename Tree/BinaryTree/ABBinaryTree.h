@@ -39,13 +39,13 @@ public:
 template <typename Key>
 class ABBinaryTree
 {
-    void display(ostream &ostream, ABBinaryNode<Key> *node, int current, int offset = 7)
+    void display(std::ostream &ostream, ABBinaryNode<Key> *node, int current, int offset = 7)
     {
         if (node)
         {
             
             display(ostream, node -> _right, current + offset);
-            ostream << setw(current) << "(" << node -> _key << " : " << "-" /*node -> _data*/ << ")" << endl << endl;
+            ostream << std::setw(current) << "(" << node -> _key << " : " << "-" /*node -> _data*/ << ")" << std::endl << std::endl;
             display(ostream, node -> _left, current + offset);
         }
     }
@@ -76,7 +76,7 @@ public:
         empty();
     }
     
-    void display(ostream &ostream)
+    void display(std::ostream &ostream)
     {
         display(ostream, _root, 0);
     }
@@ -92,7 +92,7 @@ public:
     }
 };
 
-template <typename Key, typename Comparator = less<Key>>
+template <typename Key, typename Comparator = std::less<Key>>
 class ABBinarySearchTree : public ABBinaryTree<Key>
 {
     void insert(ABBinaryNode<Key> *&node, Key &key, int &data)
