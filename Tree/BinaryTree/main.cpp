@@ -45,6 +45,13 @@ public:
     virtual ~BinaryNode()
     {
     }
+    
+    virtual void display(std::ostream &ostream)
+    {
+        ostream << "(" << _key << " : "
+        << _data << " : "
+        << _count << ")";
+    }
 };
 
 // mark -
@@ -57,11 +64,11 @@ class BinaryTree
         if (node != _sentinel)
         {
             display(ostream, node -> _right, current + offset);
-            ostream << std::setw(current)
-			<< "(" << node -> _key << " : "
-			<< node -> _data << " : "
-			<< node -> _count << ")"
-			<< std::endl << std::endl;
+            
+            ostream << std::setw(current);
+            node -> display(ostream);
+			ostream << std::endl << std::endl;
+            
             display(ostream, node -> _left, current + offset);
         }
     }
@@ -89,16 +96,11 @@ protected:
 	
 public:
 
-    BinaryTree(bool sentinel = false)
+    BinaryTree(BinaryNode<Key> *sentinel = nullptr)
     {
-		if (sentinel)
-		{
-			_sentinel = new BinaryNode<Key>();
-			_sentinel -> _left = _sentinel;
-			_sentinel -> _right = _sentinel;
-		}
-		else
-			_sentinel = nullptr;
+        _sentinel = sentinel;
+        _sentinel -> _left = _sentinel;
+        _sentinel -> _right = _sentinel;
 		
 		_root = _sentinel;
     }
@@ -381,56 +383,50 @@ public:
 template <typename Key, typename Comparator = std::less<Key>>
 class BinarySearchTree : public BinaryTree<Key>
 {
-    int remove(BinaryNode<Key> *&node, Key &key)
+protected:
+	
+    virtual int remove(BinaryNode<Key> *&node, Key &key)
     {
         if (node == this -> _sentinel)
             return INT32_MAX;
-
+        
         if (_cmp(key, node -> _key))
             return remove(node -> _left, key);
         else if (_cmp(node -> _key, key))
             return remove(node -> _right, key);
         else if (node -> _left != this -> _sentinel &&
-				 node -> _right != this -> _sentinel)
+                 node -> _right != this -> _sentinel)
         {
-            BinaryNode<Key> *temp = removeMin(node -> _right);
             int data = node -> _data;
+            
+            BinaryNode<Key> *temp = findMin(node -> _right);
             node -> _data = temp -> _data;
             node -> _key = temp -> _key;
-            delete temp;
+            node -> _count = temp -> _count;
+            
+            remove(node -> _right, temp -> _key);
             return data;
         }
         else
         {
-            BinaryNode<Key> *temp = remove(node);
-            int data = temp -> _data;
-            delete temp;
+            int data = node -> _data;
+            remove(node);
             return data;
         }
     }
-
-    // node here is not NULL
-    BinaryNode<Key> *removeMin(BinaryNode<Key> *&node)
-    {
-        if (node -> _left != this -> _sentinel)
-            return removeMin(node -> _left);
-        return remove(node);
-    }
-
+    
     // node here is not NULL
     // one child at least is NULL
-    BinaryNode<Key> *remove(BinaryNode<Key> *&node)
+    void remove(BinaryNode<Key> *&node)
     {
         BinaryNode<Key> *temp = node;
         if (node -> _left != this -> _sentinel)
             node = node -> _left;
         else
             node = node -> _right;
-        return temp;
+        delete temp;
     }
-
-protected:
-	
+    
 	virtual void rotateWithLeftChild(BinaryNode<Key> *&node)
 	{
 		BinaryNode<Key> *left = node -> _left;
@@ -477,7 +473,7 @@ protected:
 	BinaryNode<Key> *findMin(BinaryNode<Key> *node)
 	{
 		if (node != this -> _sentinel)
-			while (node -> _left)
+			while (node -> _left != this -> _sentinel)
 				node = node -> _left;
 		return node;
 	}
@@ -485,7 +481,7 @@ protected:
 	BinaryNode<Key> *findMax(BinaryNode<Key> *node)
 	{
 		if (node != this -> _sentinel)
-			while (node -> _right)
+			while (node -> _right != this -> _sentinel)
 				node = node -> _right;
 		return node;
 	}
@@ -494,7 +490,7 @@ protected:
 	
 public:
 	
-    BinarySearchTree(bool sentinel = false) : BinaryTree<Key>(sentinel)
+    BinarySearchTree(BinaryNode<Key> *sentinel = nullptr) : BinaryTree<Key>(sentinel)
     {
     }
 
@@ -569,11 +565,12 @@ void binarySearchTree()
 template <typename Key>
 class AVLBinaryNode : public BinaryNode<Key>
 {
-    AVLBinaryNode()
+public:
+    AVLBinaryNode() : BinaryNode<Key>()
     {
+        _height = 0;
     }
     
-public:
     int _height;
     
     AVLBinaryNode(Key &key, int &data, BinaryNode<Key> *sentinel = nullptr) : BinaryNode<Key>(key, data, sentinel)
@@ -594,6 +591,13 @@ public:
     {
         return static_cast<AVLBinaryNode<Key> *>(this -> _right);
     }
+    
+    virtual void display(std::ostream &ostream)
+    {
+        BinaryNode<Key>::display(ostream);
+        ostream << " h : " << _height;
+    }
+
 };
 
 // mark -
@@ -623,7 +627,8 @@ protected:
 		
 		pNode -> getRight() -> _height = max(height(pNode -> getRight() -> getLeft()),
 											 height(pNode -> getRight() -> getRight())) + 1;
-		pNode -> _height = max(height(pNode -> getLeft()), height(pNode -> getRight())) + 1;
+		pNode -> _height = max(height(pNode -> getLeft()),
+                               height(pNode -> getRight())) + 1;
 	}
 	
 	virtual void rotateWithRightChild(BinaryNode<Key> *&node)
@@ -646,7 +651,6 @@ protected:
         else if (this -> _cmp(key, pNode -> _key))
         {
             insert(pNode -> _left, key, data);
-            
             if (height(pNode -> getLeft()) - height(pNode -> getRight()) == 2)
             {
                 if (this -> _cmp(key, pNode -> _left -> _key))
@@ -663,7 +667,6 @@ protected:
         else if (this -> _cmp(pNode -> _key, key))
         {
             insert(pNode -> _right, key, data);
-            
             if (height(pNode -> getRight()) - height(pNode -> getLeft()) == 2)
             {
                 if (this -> _cmp(key, pNode -> _right -> _key))
@@ -679,23 +682,81 @@ protected:
         }
         else
             ++pNode -> _count;
+        
+        pNode = static_cast<AVLBinaryNode<Key> *>(node);
         pNode -> _height = max(height(pNode -> getLeft()), height(pNode -> getRight())) + 1;
+    }
+    
+    virtual int remove(BinaryNode<Key> *&node, Key &key)
+    {
+        AVLBinaryNode<Key> *pNode = static_cast<AVLBinaryNode<Key> *>(node);
+        
+        if (pNode == this -> _sentinel)
+            return INT32_MAX;
+        
+        int data = INT32_MAX;
+        if (this -> _cmp(key, node -> _key))
+        {
+            data = remove(pNode -> _left, key);
+            if (height(pNode -> getRight()) - height(pNode -> getLeft()) == 2)
+            {
+                if (height(pNode -> getRight() -> getLeft()) >
+                    height(pNode -> getRight() -> getRight()))
+                    rotateWithLeftChild(pNode -> _right);
+                    rotateWithRightChild(node);
+            }
+        }
+        else if (this -> _cmp(pNode -> _key, key))
+        {
+            data = remove(pNode -> _right, key);
+            if (height(pNode -> getLeft()) - height(pNode -> getRight()) == 2)
+            {
+                if (height(pNode -> getLeft() -> getRight()) >
+                    height(pNode -> getLeft() -> getLeft()))
+                    rotateWithRightChild(pNode -> _left);
+                    rotateWithLeftChild(node);
+            }
+        }
+        else if (pNode -> _right != this -> _sentinel &&
+                 pNode -> _left != this -> _sentinel)
+        {
+            data = pNode -> _data;
+            
+            BinaryNode<Key> *temp = BinarySearchTree<Key, Comparator>::findMin(pNode -> _right);
+            pNode -> _key = temp -> _key;
+            pNode -> _data = temp -> _data;
+            pNode -> _count = temp -> _count;
+            
+            remove(pNode -> _right, temp -> _key);
+            if (height(pNode -> getLeft()) - height(pNode -> getRight()) == 2)
+            {
+                if (height(pNode -> getLeft() -> getRight()) >
+                    height(pNode -> getLeft() -> getLeft()))
+                    rotateWithRightChild(pNode -> _left);
+                    rotateWithLeftChild(node);
+            }
+        }
+        else
+        {
+            data = pNode -> _data;
+            BinarySearchTree<Key, Comparator>::remove(node);
+            return data;
+        }
+        
+        // TODO: move to balance
+        pNode = static_cast<AVLBinaryNode<Key> *>(node);
+        pNode -> _height = max(height(pNode -> getLeft()), height(pNode -> getRight())) + 1;
+        return data;
     }
     
 public:
 	
-    AVLBinarySearchTree():BinarySearchTree<Key, Comparator>(true)
+    AVLBinarySearchTree() : BinarySearchTree<Key, Comparator>(new AVLBinaryNode<Key>())
     {
     }
     
     virtual ~AVLBinarySearchTree()
     {
-    }
-
-    virtual int remove(Key &key)
-    {
-        // TODO:
-        return 0;
     }
 };
 
@@ -715,6 +776,20 @@ void avlBinarySearchTree()
         int data = 0;
         bstree -> insert(key, data);
         
+        cout << "Printing tree..." << endl << endl;
+        bstree -> display(cout);
+    }
+    
+    int key = -1;
+    while (true)
+    {
+        cout << "Enter key: " << endl;
+        cin >> key;
+        if (key == -1)
+            break;
+        
+        cout << "Removing key: " << key << endl << endl;
+        bstree -> remove(key);
         cout << "Printing tree..." << endl << endl;
         bstree -> display(cout);
     }
@@ -790,7 +865,7 @@ class TopDownSplayBinarySearchTree : public BinarySearchTree<Key, Comparator>
 		
 public:
 	
-	TopDownSplayBinarySearchTree() : BinarySearchTree<Key, Comparator>(true)
+	TopDownSplayBinarySearchTree() : BinarySearchTree<Key, Comparator>(new BinaryNode<Key>())
 	{
 	}
 	
@@ -907,7 +982,7 @@ void topDownSplayBinarySearchTree()
 	}
 	
 	int key = 16;
-	cout << "Finding key..." << key << endl << endl;
+	cout << "Finding key: " << key << endl << endl;
 	stree -> find(key);
 	cout << "Printing tree..." << endl << endl;
 	stree -> display(cout);
@@ -922,6 +997,11 @@ class SplayBinaryNode : public BinaryNode<Key>
 {
 public:
     BinaryNode<Key> *_parent;
+    
+    SplayBinaryNode() : BinaryNode<Key>()
+    {
+        _parent = nullptr;
+    }
     
     SplayBinaryNode(Key &key, int &data, BinaryNode<Key> *sentinel = nullptr) : BinaryNode<Key>(key, data, sentinel)
     {
@@ -1099,7 +1179,7 @@ class SplayBinarySearchTree : public BinarySearchTree<Key, Comparator>
     
 public:
     
-    SplayBinarySearchTree() : BinarySearchTree<Key, Comparator>(true)
+    SplayBinarySearchTree() : BinarySearchTree<Key, Comparator>(new SplayBinaryNode<Key>())
     {
     }
     
@@ -1201,8 +1281,8 @@ void splayBinarySearchTree()
 int main()
 {
 //	topDownSplayBinarySearchTree();
-	splayBinarySearchTree();
-//	avlBinarySearchTree();
+//	splayBinarySearchTree();
+	avlBinarySearchTree();
     return 0;
 }
 
