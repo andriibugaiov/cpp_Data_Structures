@@ -59,7 +59,9 @@ public:
 template <typename Key>
 class BinaryTree
 {
-    void display(std::ostream &ostream, BinaryNode<Key> *node, int current, int offset = 7)
+protected:
+    
+    virtual void display(std::ostream &ostream, BinaryNode<Key> *node, int current, int offset = 7)
     {
         if (node != _sentinel)
         {
@@ -67,13 +69,11 @@ class BinaryTree
             
             ostream << std::setw(current);
             node -> display(ostream);
-			ostream << std::endl << std::endl;
+            ostream << std::endl << std::endl;
             
             display(ostream, node -> _left, current + offset);
         }
     }
-
-protected:
     
     bool isRoot(BinaryNode<Key> *node)
     {
@@ -111,17 +111,20 @@ public:
 		if (_sentinel)
 			delete _sentinel;
     }
+    
+    virtual void empty()
+    {
+        this -> empty(_root);
+        _root = _sentinel;
+    }
+    
+// mark -
 
     void display(std::ostream &ostream)
     {
         display(ostream, _root, 0);
     }
 
-    virtual void empty()
-    {
-        empty(_root);
-		_root = _sentinel;
-    }
 
     bool isEmpty()
     {
@@ -474,7 +477,7 @@ protected:
             return node;
     }
 	
-	BinaryNode<Key> *findMin(BinaryNode<Key> *node)
+	virtual BinaryNode<Key> *findMin(BinaryNode<Key> *node)
 	{
 		if (node != this -> _sentinel)
 			while (node -> _left != this -> _sentinel)
@@ -482,7 +485,7 @@ protected:
 		return node;
 	}
 	
-	BinaryNode<Key> *findMax(BinaryNode<Key> *node)
+	virtual BinaryNode<Key> *findMax(BinaryNode<Key> *node)
 	{
 		if (node != this -> _sentinel)
 			while (node -> _right != this -> _sentinel)
@@ -506,6 +509,8 @@ public:
     {
     }
 
+// mark -
+    
     virtual void insert(Key &key, int &data)
     {
         insert(this -> _root, key, data);
@@ -616,6 +621,8 @@ class AVLBinarySearchTree : public BinarySearchTree<Key, Comparator>
     {
         return static_cast<BinaryNode<Key> *>(this -> _root);
     }
+   
+// mark -
     
     int height(AVLBinaryNode<Key> *node)
     {
@@ -1039,16 +1046,6 @@ public:
     {
         return static_cast<SplayBinaryNode<Key> *>(this -> _parent);
     }
-    
-    SplayBinaryNode<Key> *successor()
-    {
-        return this;
-    }
-    
-    SplayBinaryNode<Key> *predecessor()
-    {
-        return this;
-    }
 };
 
 // mark -
@@ -1056,10 +1053,13 @@ public:
 template <typename Key, typename Comparator = less<Key>>
 class SplayBinarySearchTree : public BinarySearchTree<Key, Comparator>
 {
+    
     SplayBinaryNode<Key> *getRoot()
     {
         return static_cast<SplayBinaryNode<Key> *>(this -> _root);
     }
+    
+// mark -
     
     SplayBinaryNode<Key> *rotateWithRightChild(SplayBinaryNode<Key> *node)
     {
@@ -1203,27 +1203,109 @@ class SplayBinarySearchTree : public BinarySearchTree<Key, Comparator>
     SplayBinaryNode<Key> *_pre_head;
     SplayBinaryNode<Key> *_post_tail;
     
+protected:
+    
+    virtual void display(std::ostream &ostream, BinaryNode<Key> *node, int current, int offset = 7)
+    {
+        if (node != this -> _sentinel)
+        {
+            if (node != _post_tail && node != _pre_head)
+                display(ostream, node -> _right, current + offset);
+            
+            ostream << std::setw(current);
+            
+            if (node == _post_tail)
+                ostream << "POST_TAIL";
+            else if (node == _pre_head)
+                ostream << "PRE_HEAD";
+            else
+                node -> display(ostream);
+            
+            ostream << std::endl << std::endl;
+            
+            if (node != _post_tail && node != _pre_head)
+                display(ostream, node -> _left, current + offset);
+        }
+    }
+    
+    // TODO:
+    virtual BinaryNode<Key> *find(BinaryNode<Key> *node, Key &key)
+    {
+        if (node == this -> _sentinel || node == _pre_head || node == _post_tail)
+            return this -> _sentinel;
+        
+        if (this -> _cmp(key, node -> _key))
+            return find(node -> _left, key);
+        else if (this -> _cmp(node -> _key, key))
+            return find(node -> _right, key);
+        else
+            return node;
+    }
+    
+    //    virtual BinaryNode<Key> *findMin(BinaryNode<Key> *node)
+    //    {
+    //        if (node != this -> _sentinel)
+    //            while (node -> _left != this -> _sentinel)
+    //                node = node -> _left;
+    //        return node;
+    //    }
+    //
+    //    virtual BinaryNode<Key> *findMax(BinaryNode<Key> *node)
+    //    {
+    //        if (node != this -> _sentinel)
+    //            while (node -> _right != this -> _sentinel)
+    //                node = node -> _right;
+    //        return node;
+    //    }
+    
 public:
     
     SplayBinarySearchTree() : BinarySearchTree<Key, Comparator>(new SplayBinaryNode<Key>())
     {
+        if (this -> _sentinel)
+        {
+            SplayBinaryNode<Key> *sentinel = static_cast<SplayBinaryNode<Key> *>(this -> _sentinel);
+            sentinel -> _parent = sentinel;
+        }
+        
         _pre_head = new SplayBinaryNode<Key>();
         _post_tail = new SplayBinaryNode<Key>();
         
+        _pre_head -> _left = _pre_head -> _parent = this -> _sentinel;
         _pre_head -> _right = _post_tail;
+        
         _post_tail -> _left = _pre_head;
+        _post_tail -> _right = _post_tail -> _parent = this -> _sentinel;
     }
     
     virtual ~SplayBinarySearchTree()
     {
+        _pre_head -> _right -> _left = this -> _sentinel;
+        delete _pre_head;
+        
+        _post_tail -> _left -> _right = this -> _sentinel;
+        delete _post_tail;
     }
+    
+    virtual void empty()
+    {
+        _pre_head -> _right -> _left = this -> _sentinel;
+        _pre_head -> _right = _post_tail;
+        
+        _post_tail -> _left -> _right = this -> _sentinel;
+        _post_tail -> _left = _pre_head;
+        
+        BinarySearchTree<Key, Comparator>::empty();
+    }
+    
+// mark -
     
     virtual void insert(Key &key, int &data)
     {
         BinaryNode<Key> *parent = this -> _sentinel;
         SplayBinaryNode<Key> *node = getRoot();
         
-        while (node != this -> _sentinel)
+        while (node != this -> _sentinel && node != _pre_head && node != _post_tail)
         {
             if (this -> _cmp(key, node -> _key))
             {
@@ -1243,7 +1325,16 @@ public:
         }
         
         if (parent == this -> _sentinel && node == this -> _sentinel)
-            this -> _root = new SplayBinaryNode<Key>(key, data, this -> _sentinel);
+        {
+            node = new SplayBinaryNode<Key>(key, data, this -> _sentinel);
+            this -> _root = node;
+            
+            _pre_head -> _right = node;
+            node -> _left = _pre_head;
+            
+            node -> _right = _post_tail;
+            _post_tail -> _left = node;
+        }
         else if (node == this -> _sentinel)
         {
             node = new SplayBinaryNode<Key>(key, data, this -> _sentinel);
@@ -1255,14 +1346,35 @@ public:
                 throw runtime_error("Error!");
             node -> _parent = parent;
         }
+        else if (node == _pre_head || node == _post_tail)
+        {
+            node = new SplayBinaryNode<Key>(key, data, this -> _sentinel);
+            if (parent -> _left == _pre_head)
+            {
+                parent -> _left = node;
+                node -> _parent = parent;
+                
+                node -> _left = _pre_head;
+                _pre_head -> _right = node;
+            }
+            else if (parent -> _right == _post_tail)
+            {
+                parent -> _right = node;
+                node -> _parent = parent;
+                
+                node -> _right = _post_tail;
+                _post_tail -> _left = node;
+            }
+            else
+                throw runtime_error("Error!");
+        }
         
-        if (node != this -> _sentinel)
-            splay(node);
+        splay(node);
     }
     
     virtual int find(Key &key)
     {
-        BinaryNode<Key> *node = BinarySearchTree<Key, Comparator>::find(this -> _root, key);
+        BinaryNode<Key> *node = find(this -> _root, key);
         SplayBinaryNode<Key> *cNode = static_cast<SplayBinaryNode<Key> *>(node);
         
         if (cNode != this -> _sentinel)
@@ -1277,16 +1389,51 @@ public:
         return 0;
     }
     
+// mark -
+
+    SplayBinaryNode<Key> *successor(SplayBinaryNode<Key> *node)
+    {
+        if (node -> getRight() != this -> _sentinel)
+        {
+            SplayBinaryNode<Key> *temp = node -> getRight();
+            while (temp -> getLeft() != this -> _sentinel &&
+                   temp -> getLeft() != node)
+                temp = temp -> getLeft();
+            return temp;
+        }
+        else if (node == _post_tail)
+            return _post_tail;
+        else if (node == node -> getParent() -> getLeft())
+            return node -> getParent();
+        else if (node == node -> getParent() -> getRight())
+        {
+            SplayBinaryNode<Key> *temp = node -> getParent();
+            while (this -> _cmp(temp -> _key, node -> _key))
+                temp = temp -> getParent();
+            return temp;
+        }
+        else
+            throw runtime_error("Error!");
+        return node;
+    }
+    
+    // TODO:
+    SplayBinaryNode<Key> *predecessor(SplayBinaryNode<Key> *node)
+    {
+        return node;
+    }
+    
     class Iterator
     {
+        SplayBinarySearchTree<Key, Comparator> *_tree;
         SplayBinaryNode<Key> *_current;
         
-        Iterator(SplayBinaryNode<Key> *current) : _current(current)
+        Iterator(SplayBinarySearchTree<Key, Comparator> *tree, SplayBinaryNode<Key> *current) : _tree(tree), _current(current)
         {
         }
         
     public:
-        Iterator() : _current(nullptr)
+        Iterator() : _tree(nullptr), _current(nullptr)
         {
         }
         
@@ -1307,7 +1454,7 @@ public:
         
         Iterator &operator++()
         {
-            _current = _current -> successor();
+            _current = _tree -> successor(_current);
             return  *this;
         }
         
@@ -1320,7 +1467,7 @@ public:
         
         Iterator &operator--()
         {
-            _current = _current -> predecessor();
+            _current = _tree -> predecessor(_current);
             return *this;
         }
         
@@ -1329,16 +1476,29 @@ public:
             Iterator temp =  *this;
             return --(*this);
         }
+        
+        friend class SplayBinarySearchTree<Key, Comparator>;
     };
+    
+    Iterator begin()
+    {
+        return Iterator(this, successor(_pre_head));
+    }
+    
+    Iterator end()
+    {
+        return Iterator(this, _post_tail);
+    }
 };
 
 // mark -
 
 void splayBinarySearchTree()
 {
-    BinarySearchTree<int> *stree = new SplayBinarySearchTree<int>();
+    BinarySearchTree<int> *btree = new SplayBinarySearchTree<int>();
+    SplayBinarySearchTree<int> *stree = static_cast<SplayBinarySearchTree<int> *>(btree);
 
-    int keys[] = {3, 2, 1, 4, 5, 5, 3,  6, 7, 16, 15, 14, 13, 12, 11, 10, 9, 8};
+    int keys[] = {3, 2, 1, 4, 5,   5, 3,   6, 7, 16, 15, 14, 13, 12, 11, 10, 9, 8};
     int size = sizeof(keys) / sizeof(keys[0]);
 
     int T = -1;
@@ -1346,18 +1506,26 @@ void splayBinarySearchTree()
     {
         int key = keys[T];
         int data = 0;
-        stree -> insert(key, data);
+        btree -> insert(key, data);
 
         cout << "Printing tree..." << endl << endl;
-        stree -> display(cout);
+        btree -> display(cout);
     }
 
     int key = 16;
     cout << "Finding key..." << key << endl << endl;
-    stree -> find(key);
+    btree -> find(key);
     cout << "Printing tree..." << endl << endl;
-    stree -> display(cout);
-
+    btree -> display(cout);
+    
+    SplayBinarySearchTree<int>::Iterator iterator = stree -> begin();
+    while (iterator != stree -> end())
+    {
+        cout << *iterator << " ";
+        ++iterator;
+    }
+    cout << endl;
+    
     delete stree;
 }
 
