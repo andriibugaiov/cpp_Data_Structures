@@ -23,12 +23,12 @@ public:
     BinaryNode *_left;
     BinaryNode *_right;
 
-	BinaryNode(BinaryNode<Key> *sentinel = nullptr)
+	BinaryNode()
 	{
 		_count = 1;
 		
-		_left = sentinel;
-		_right = sentinel;
+		_left = nullptr;
+		_right = nullptr;
 	}
 	
     BinaryNode(Key &key, int &data, BinaryNode<Key> *sentinel = nullptr)
@@ -137,7 +137,7 @@ public:
 		char popNodeId = idStack[sp - 1];
 		idStack[sp - 1] = '\0';
 		BinaryNode<Key> *popNode = stack[sp - 1];
-		stack[sp - 1] = nullptr;
+		stack[sp - 1] = this -> _sentinel;
 		--sp;
 		
 		ostream << popNodeId
@@ -152,7 +152,7 @@ public:
 		BinaryNode<Key> *stack[100];
 		char idStack[100];
 		int sp = 0;
-		stack[sp] = nullptr;
+		stack[sp] = this -> _sentinel;
 		idStack[sp] = '\0';
 
 		char id = istream.get();
@@ -163,7 +163,7 @@ public:
 			
 			if (id == '(')
 			{
-				stack[sp] = nullptr;
+				stack[sp] = this -> _sentinel;
 				idStack[sp] = id;
 				sp++;
 			}
@@ -173,7 +173,7 @@ public:
 					popNode(ostream, idStack, stack, sp);
 				
 				idStack[sp - 1] = '\0';
-				stack[sp - 1] = nullptr;
+				stack[sp - 1] = this -> _sentinel;
 				--sp;
 			}
 			else
@@ -219,7 +219,7 @@ public:
 	{
 		BinaryNode<Key> *stack[100];
 		int sp = 0;
-		stack[sp] = nullptr;
+		stack[sp] = this -> _sentinel;
 		
 		char id = istream.get();
 		while (!istream.eof())
@@ -234,7 +234,7 @@ public:
 			istream >> data;
 			istream.ignore(1);
 			
-			BinaryNode<Key> *node = new BinaryNode<Key>(key, data);
+			BinaryNode<Key> *node = new BinaryNode<Key>(key, data, this -> _sentinel);
 			switch (id)
 			{
 				case 'T':
@@ -276,13 +276,17 @@ public:
 	char nodeId(BinaryNode<Key> *node)
 	{
 		char id = '-';
-		if (!node -> _left && !node -> _right)
+		if (node -> _left == this -> _sentinel &&
+            node -> _right == this -> _sentinel)
 			id = 'T'; // Terminating Leaf
-		else if (node -> _left && node -> _right)
+		else if (node -> _left != this -> _sentinel &&
+                 node -> _right != this -> _sentinel)
 			id = 'B'; // Binary Node
-		else if (node -> _left && !node -> _right)
+		else if (node -> _left != this -> _sentinel &&
+                 node -> _right == this -> _sentinel)
 			id = 'L'; // Left Unary Node
-		else if (!node -> _left && node -> _right)
+		else if (node -> _left == this -> _sentinel &&
+                 node -> _right != this -> _sentinel)
 			id = 'R'; // Right Unary Node
 		return id;
 	}
@@ -290,7 +294,7 @@ public:
 	// inordered binary tree traversal
 	void toInfix(ostream &ostream, BinaryNode<Key> *node)
 	{
-		if (!node)
+		if (node == this -> _sentinel)
 			return;
 		
 		char id = nodeId(node);
@@ -319,7 +323,7 @@ public:
 	// postordered binary tree traversal
 	void toPostfix(ostream &ostream, BinaryNode<Key> *node)
 	{
-		if (!node)
+		if (node == this -> _sentinel)
 			return;
 		
 		toPostfix(ostream, node -> _left);
@@ -448,7 +452,7 @@ protected:
 	virtual void insert(BinaryNode<Key> *&node, Key &key, int &data)
 	{
 		if (node == this -> _sentinel)
-			node = new BinaryNode<Key>(key, data);
+			node = new BinaryNode<Key>(key, data, this -> _sentinel);
 		else if (_cmp(key, node -> _key))
 			insert(node -> _left, key, data);
 		else if (_cmp(node -> _key, key))
@@ -487,10 +491,14 @@ protected:
 	}
 	
     Comparator _cmp;
+    
+    BinarySearchTree(BinaryNode<Key> *sentinel) : BinaryTree<Key>(sentinel)
+    {
+    }
 	
 public:
-	
-    BinarySearchTree(BinaryNode<Key> *sentinel = nullptr) : BinaryTree<Key>(sentinel)
+    
+    BinarySearchTree() : BinaryTree<Key>(new BinaryNode<Key>())
     {
     }
 
@@ -597,7 +605,6 @@ public:
         BinaryNode<Key>::display(ostream);
         ostream << " h : " << _height;
     }
-
 };
 
 // mark -
@@ -805,7 +812,9 @@ class TopDownSplayBinarySearchTree : public BinarySearchTree<Key, Comparator>
 	void splay(BinaryNode<Key> *&node, Key &key)
 	{
 		BinaryNode<Key> *maxLeft, *minRight;
-		BinaryNode<Key> head(this -> _sentinel);
+		BinaryNode<Key> head;
+        head._left = this -> _sentinel;
+        head._right = this -> _sentinel;
 		maxLeft = minRight = &head;
 		
 		this -> _sentinel -> _key = key;
@@ -878,7 +887,11 @@ public:
 		static BinaryNode<Key> *newNode = nullptr;
 		
 		if (!newNode)
-			newNode = new BinaryNode<Key>(this -> _sentinel);
+        {
+			newNode = new BinaryNode<Key>();
+            newNode -> _left = this -> _sentinel;
+            newNode -> _right = this -> _sentinel;
+        }
 		newNode -> _key = key;
 		newNode -> _data = data;
 		
@@ -1025,6 +1038,16 @@ public:
     SplayBinaryNode<Key> *getParent()
     {
         return static_cast<SplayBinaryNode<Key> *>(this -> _parent);
+    }
+    
+    SplayBinaryNode<Key> *successor()
+    {
+        return this;
+    }
+    
+    SplayBinaryNode<Key> *predecessor()
+    {
+        return this;
     }
 };
 
@@ -1177,10 +1200,18 @@ class SplayBinarySearchTree : public BinarySearchTree<Key, Comparator>
         }
     }
     
+    SplayBinaryNode<Key> *_pre_head;
+    SplayBinaryNode<Key> *_post_tail;
+    
 public:
     
     SplayBinarySearchTree() : BinarySearchTree<Key, Comparator>(new SplayBinaryNode<Key>())
     {
+        _pre_head = new SplayBinaryNode<Key>();
+        _post_tail = new SplayBinaryNode<Key>();
+        
+        _pre_head -> _right = _post_tail;
+        _post_tail -> _left = _pre_head;
     }
     
     virtual ~SplayBinarySearchTree()
@@ -1245,6 +1276,60 @@ public:
         // TODO:
         return 0;
     }
+    
+    class Iterator
+    {
+        SplayBinaryNode<Key> *_current;
+        
+        Iterator(SplayBinaryNode<Key> *current) : _current(current)
+        {
+        }
+        
+    public:
+        Iterator() : _current(nullptr)
+        {
+        }
+        
+        bool operator==(const Iterator &anOther)
+        {
+            return _current == anOther._current;
+        }
+        
+        bool operator!=(const Iterator &anOther)
+        {
+            return _current != anOther._current;
+        }
+        
+        Key &operator*()
+        {
+            return _current -> _key;
+        }
+        
+        Iterator &operator++()
+        {
+            _current = _current -> successor();
+            return  *this;
+        }
+        
+        Iterator operator++(int)
+        {
+            Iterator temp = *this;
+            ++(*this);
+            return temp;
+        }
+        
+        Iterator &operator--()
+        {
+            _current = _current -> predecessor();
+            return *this;
+        }
+        
+        Iterator operator--(int)
+        {
+            Iterator temp =  *this;
+            return --(*this);
+        }
+    };
 };
 
 // mark -
@@ -1280,9 +1365,7 @@ void splayBinarySearchTree()
 
 int main()
 {
-//	topDownSplayBinarySearchTree();
-//	splayBinarySearchTree();
-	avlBinarySearchTree();
+    splayBinarySearchTree();
     return 0;
 }
 
