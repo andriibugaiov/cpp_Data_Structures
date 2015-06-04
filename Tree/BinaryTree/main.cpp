@@ -1393,16 +1393,15 @@ public:
 
     SplayBinaryNode<Key> *successor(SplayBinaryNode<Key> *node)
     {
-        if (node -> getRight() != this -> _sentinel)
+        if (node == _post_tail)
+            return _post_tail;
+        else if (node -> getRight() != this -> _sentinel)
         {
             SplayBinaryNode<Key> *temp = node -> getRight();
-            while (temp -> getLeft() != this -> _sentinel &&
-                   temp -> getLeft() != node)
+            while (temp -> getLeft() != this -> _sentinel && temp -> getLeft() != node)
                 temp = temp -> getLeft();
             return temp;
         }
-        else if (node == _post_tail)
-            return _post_tail;
         else if (node == node -> getParent() -> getLeft())
             return node -> getParent();
         else if (node == node -> getParent() -> getRight())
@@ -1417,9 +1416,28 @@ public:
         return node;
     }
     
-    // TODO:
     SplayBinaryNode<Key> *predecessor(SplayBinaryNode<Key> *node)
     {
+        if (node == _pre_head)
+            return _pre_head;
+        else if (node -> getLeft() != this -> _sentinel)
+        {
+            SplayBinaryNode<Key> *temp = node -> getLeft();
+            while (temp -> getRight() != this -> _sentinel && temp -> getRight() != node)
+                temp = temp -> getRight();
+            return temp;
+        }
+        else if (node == node -> getParent() -> getRight())
+            return node -> getParent();
+        else if (node == node -> getParent() -> getLeft())
+        {
+            SplayBinaryNode<Key> *temp = node -> getParent();
+            while (this -> _cmp(node -> _key, temp -> _key))
+                temp = temp -> getParent();
+            return temp;
+        }
+        else
+            throw runtime_error("Error!");
         return node;
     }
     
@@ -1474,7 +1492,8 @@ public:
         Iterator operator--(int)
         {
             Iterator temp =  *this;
-            return --(*this);
+            --(*this);
+            return temp;
         }
         
         friend class SplayBinarySearchTree<Key, Comparator>;
@@ -1525,6 +1544,11 @@ void splayBinarySearchTree()
         ++iterator;
     }
     cout << endl;
+    
+    while (iterator-- != stree -> begin())
+    {
+        cout << *iterator << " ";
+    }
     
     delete stree;
 }
